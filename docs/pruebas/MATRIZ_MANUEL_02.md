@@ -1,0 +1,23 @@
+# Pruebas de cargos y permisos individuales · MANUEL-02
+
+Fecha: 19/10/2026, America/Guatemala. Complemento de M-01 a M-20. La salida actual completa es **168 pruebas, 1,019 aserciones, 47.655 segundos, sin fallos**, con PHP 8.4.12/PHPUnit 12.5.40 y PostgreSQL 17.11 real en sicovi_test/sicovi. Las120 pruebas de la fase inicial permanecen como evidencia histórica; el resultado nuevo incluye sus regresiones y las ampliaciones.
+
+Precondiciones comunes: dependencias instaladas; esquema de pruebas preparado; guarda efectiva antes de RefreshDatabase; SystemSeeder crea seis roles y 22 permisos, sin cuentas. Fixtures y contraseñas públicas de demostración son exclusivamente de pruebas. Ninguna prueba limpia desarrollo. Las sesiones HTTP simuladas cambian de cuenta con aislamiento; las comprobaciones de producción utilizan tokens CSRF vigentes.
+
+| Caso / requisito | Entradas y pasos | Resultado esperado | Obtenido / evidencia |
+| --- | --- | --- | --- |
+| M-21 / RF-02: perfiles | Sembrar dos veces; consultar roles/grants; personalizar nombre, estado y permisos y repetir seeder. | Seis roles; Supervisor lee costos/configuración; Bodega lee sin costos; sin escrituras ni restauración de preferencias. | Correcto. RoleProfilesTest y phpunit.txt. |
+| M-22 / RF-01/02: demos | Habilitar demo en testing y provisionar inicial m; verificar4hashes, rol e indicador; entrar/salir con cuatro correos y clave solicitada. | Cuatro cuentas con hash, datos en minúsculas y roles correctos; auditoría sin contraseña/hash. | Correcto. DemoAccountsTest; provisión local real en cuentas-demo.txt. |
+| M-23 / RNF-01: aislamiento demo | Desactivar bandera o simular producción aun con bandera; probar provisionar, login y sesión anterior. Probar cuenta normal fuerte. | Demos bloqueadas; cuenta normal conserva acceso; política fuerte ordinaria no se relaja. | Correcto. DemoAccountsTest. |
+| M-24 / RF-02/03: casillas | Crear vendedor con costo agregado y marcas denegadas; verificar otro vendedor y plantilla; editar mismas asignaciones y revocar con instancia/sesión existentes. | Allow/deny individual, sin alterar otros usuarios ni rol; autorización actualizada en servidor. | Correcto. UserPermissionsTest; casillas comprobadas en navegador. |
+| M-25 / RF-02/RNF-02: administración | Intentar quitar permisos críticos al único administrador; repetir con dos administradores y revocar al último capaz. | Rechazo y rollback de identidad/permisos/auditoría si no queda administración efectiva. | Correcto. UserPermissionsTest y carrera administrativa de dos procesos. |
+| M-26 / RF-02/RNF-01: validación | Marcador presente sin casillas, marcador ausente/falso, cambio de cargo, códigos desconocidos, lista sin marcador, editor sin roles.manage, payload de privilegios. | Vacío explícito revoca; ausencia conserva; nuevo cargo sin selección hereda; solicitudes no autorizadas/ambiguas rechazadas. | Correcto. UserPermissionsTest y regresiones AccessTest. |
+| M-27 / RF-01/02: correo | Crear/entrar con mayúsculas/espacios, inspeccionar valor persistido, intentar SQL no normalizado con correo nuevo. | Almacenamiento minúsculo; login equivalente; CHECK SQL rechaza23514 sin persistencia parcial. | Correcto. AccessTest, DemoAccountsTest y BaseDataTest. |
+| M-28 / RNF-02: repetición/rollback | Reprovisionar demos editadas, probar conflicto con cuenta normal/otro rol, rol inactivo y fallo de auditoría. | No sobrescribir ni duplicar; lote inválido no deja cuentas parciales; estados/contraseñas personalizados conservados. | Correcto. DemoAccountsTest. |
+| M-29 / RNF-04: interfaz | Seleccionar Vendedor en navegador:5 acciones; agregar costo y quitar marcas; restaurar; seleccionar Administrador:22 acciones. | Casillas y grupos responden, valores iniciales coherentes y personalización sin guardar no afecta BD. | Correcto. Capturas y lectura de accesibilidad en navegador; pruebas de render incluidas. |
+
+La prueba concurrente final observó dos conexiones PostgreSQL, espera de bloqueo, un administrador activo, uno inactivo y una sola auditoría de desactivación. No representa una prueba de ventas/última unidad. Los fixtures de esa carrera quedan en sicovi_test; no en desarrollo.
+
+El primer pase de las pruebas nuevas detectó cinco fallos de preparación: dos comparaciones de atributos sin refrescar defaults/fechas, dos cambios de cuenta sin limpiar sesión y una simulación de producción sin token CSRF. Se corrigieron los fixtures y tokens sin desactivar controles de la aplicación; el pase final completo es correcto.
+
+Evidencia: docs/evidencias/manuel/roles_usuarios/. La recepción en otra computadora, restauración cronometrada y pruebas comerciales siguen pendientes de sus responsables; no se declaran realizadas por esta actualización.

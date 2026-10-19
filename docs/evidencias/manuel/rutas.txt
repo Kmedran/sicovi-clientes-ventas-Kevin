@@ -1,0 +1,33 @@
+
+  GET|HEAD        / .................................................................... dashboard › routes/web.php:22
+  GET|HEAD        account ...................................................... account.edit › AccountController@edit
+  PUT             account/password ............................... account.password › AccountController@updatePassword
+  GET|HEAD        catalogs/{catalog} ........................................ catalogs.index › CatalogController@index
+  POST            catalogs/{catalog} ........................................ catalogs.store › CatalogController@store
+  GET|HEAD        catalogs/{catalog}/create ............................... catalogs.create › CatalogController@create
+  PUT             catalogs/{catalog}/{id} ................................. catalogs.update › CatalogController@update
+  GET|HEAD        catalogs/{catalog}/{id}/edit ................................ catalogs.edit › CatalogController@edit
+  GET|HEAD        login ................................................................ login › AuthController@create
+  POST            login ........................................................... login.store › AuthController@store
+  POST            logout ............................................................. logout › AuthController@destroy
+  GET|HEAD        products .................................................. products.index › ProductController@index
+  POST            products .................................................. products.store › ProductController@store
+  GET|HEAD        products/create ......................................... products.create › ProductController@create
+  GET|HEAD        products/{product} .......................................... products.show › ProductController@show
+  PUT|PATCH       products/{product} ...................................... products.update › ProductController@update
+  PATCH           products/{product}/deactivate ................... products.deactivate › ProductController@deactivate
+  GET|HEAD        products/{product}/edit ..................................... products.edit › ProductController@edit
+  GET|HEAD        roles ........................................................... roles.index › RoleController@index
+  PUT             roles/{role} .................................................. roles.update › RoleController@update
+  GET|HEAD        roles/{role}/edit ................................................. roles.edit › RoleController@edit
+  GET|HEAD        settings ................................................... settings.edit › SettingsController@edit
+  PUT             settings ............................................... settings.update › SettingsController@update
+  GET|HEAD        users ........................................................... users.index › UserController@index
+  POST            users ........................................................... users.store › UserController@store
+  GET|HEAD        users/create .................................................. users.create › UserController@create
+  PUT|PATCH       users/{user} .................................................. users.update › UserController@update
+  PATCH           users/{user}/deactivate ............................... users.deactivate › UserController@deactivate
+  GET|HEAD        users/{user}/edit ................................................. users.edit › UserController@edit
+  PUT             users/{user}/password .......................... users.reset-password › UserController@resetPassword
+
+                                                                                                   Showing [30] routes

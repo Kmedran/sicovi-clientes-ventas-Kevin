@@ -1,0 +1,9 @@
+@extends('layouts.app')
+@section('title','Empresa y operación')
+@section('content')
+<div class="page-heading"><div><p class="eyebrow">CONFIGURACIÓN</p><h1>Empresa y operación</h1><p class="text-secondary">Datos generales y ubicación de su operación comercial.</p></div><span class="badge text-bg-light">GTQ · Guatemala</span></div>
+<form method="POST" action="{{ route('settings.update') }}" data-confirm="¿Guardar la configuración de la empresa?">@csrf @method('PUT')
+<fieldset @disabled(!auth()->user()->hasPermission('settings.update'))>
+<div class="row g-4">@foreach(['company'=>['Empresa',['trade_name'=>'Nombre comercial','legal_name'=>'Razón social','tax_id'=>'NIT / Identificador tributario','address'=>'Dirección','phone'=>'Teléfono','email'=>'Correo electrónico']], 'branch'=>['Sucursal',['code'=>'Código','name'=>'Nombre','address'=>'Dirección','phone'=>'Teléfono']], 'warehouse'=>['Bodega',['code'=>'Código','name'=>'Nombre','location'=>'Ubicación']]] as $type=>[$title,$fields])<section class="col-12 col-lg-4"><div class="surface p-4 h-100"><h2 class="section-title">{{ $title }}</h2>@foreach($fields as $field=>$label)<div class="mb-3"><label for="{{ $type }}_{{ $field }}" class="form-label">{{ $label }}{{ in_array($field,['trade_name','code','name'])?' *':'' }}</label><input class="form-control @error($type.'.'.$field) is-invalid @enderror" id="{{ $type }}_{{ $field }}" name="{{ $type }}[{{ $field }}]" value="{{ old($type.'.'.$field,$$type->$field) }}" maxlength="{{ in_array($field,['address','location'])?500:($field==='phone'?30:($field==='code'?30:150)) }}" @required(in_array($field,['trade_name','code','name']))>@error($type.'.'.$field)<div class="invalid-feedback">{{ $message }}</div>@enderror</div>@endforeach</div></section>@endforeach</div>
+@can('settings.update')<button class="btn btn-primary mt-4" type="submit">Guardar configuración</button>@endcan</fieldset></form>
+@endsection

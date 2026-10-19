@@ -1,0 +1,17 @@
+-- Ejecutar en psql con una sesión administrativa autorizada en PostgreSQL 17.
+-- No pegar contraseñas aquí. \password las solicita sin eco ni historial SQL.
+\set ON_ERROR_STOP on
+CREATE ROLE sicovi_app LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION;
+\password sicovi_app
+CREATE DATABASE sicovi_local OWNER sicovi_app ENCODING 'UTF8';
+CREATE DATABASE sicovi_test OWNER sicovi_app ENCODING 'UTF8';
+CREATE DATABASE sicovi_verificacion OWNER sicovi_app ENCODING 'UTF8';
+\connect sicovi_local
+REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+CREATE SCHEMA sicovi AUTHORIZATION sicovi_app;
+\connect sicovi_test
+REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+CREATE SCHEMA sicovi AUTHORIZATION sicovi_app;
+\connect sicovi_verificacion
+REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+CREATE SCHEMA sicovi AUTHORIZATION sicovi_app;

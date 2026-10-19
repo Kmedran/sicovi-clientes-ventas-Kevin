@@ -1,0 +1,22 @@
+{
+    "database": "sicovi_local",
+    "schema": "sicovi",
+    "server": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+    "counts": {
+        "companies": 1,
+        "branches": 1,
+        "warehouses": 1,
+        "roles": 6,
+        "permissions": 22,
+        "users": 4,
+        "categories": 2,
+        "subcategories": 1,
+        "brands": 1,
+        "units": 3,
+        "products": 5,
+        "inventory_balances": 5,
+        "audit_events": 4
+    },
+    "stock_sum": "0.000",
+    "negative_balances": 0
+}

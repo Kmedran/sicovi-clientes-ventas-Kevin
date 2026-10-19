@@ -1,0 +1,24 @@
+PROYECTO: SICOVI
+REFERENCIA: MANUEL-03, ajuste visual solicitado por el usuario.
+FECHA: 19/10/2026, America/Guatemala.
+
+CAMBIO
+Logo original copiado a public/images/sicovi-logo.png, sin modificaciones.
+SHA256: 5672e6faa5bd4002d59ebdf88840fbdba674386908424d0d9982910f463541f1
+La pantalla de login usa una plantilla de invitado sin franjas superior/inferior.
+Se eliminan el distintivo ACCESO AL SISTEMA, la instrucción sobre la cuenta
+asignada y el texto de recuperación. Panel centrado, máximo 400 px y adaptable
+a pantallas pequeñas; logo, bienvenida, correo, contraseña y botón.
+
+ALCANCE
+Solo presentación del login y recurso de marca local. Se conservan POST/CSRF,
+validación, mensajes de error/estado, autocompletado y normalización del correo.
+Se protege el renderizado al recibir un correo no textual inválido.
+Sin migraciones ni cambios a cuentas, contraseñas, permisos o navegación interna.
+
+VERIFICACIÓN
+npm run build: correcto. artisan view:cache: correcto.
+Pruebas de acceso: login válido, inválido/inactivo, entradas malformadas y logout.
+Resultado: 4 pruebas aprobadas, 31 aserciones.
+Revisión visual en navegador local: logo visible y formulario compacto sin franjas.
+Captura: docs/evidencias/manuel/login_logo/login.png.

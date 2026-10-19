@@ -1,0 +1,56 @@
+PROYECTO: SICOVI
+REFERENCIA: MANUEL-02, referencia local sin incidencia Jira verificada.
+FECHA: 19/10/2026, America/Guatemala.
+AUTOR DE LA FASE: Manuel; implementación asistida por Codex.
+RAMA: codex/manuel-base-acceso-catalogos, sin commits ni publicación.
+
+OBJETIVO Y SOLICITUD
+Añadir Supervisor/Bodega, correos siempre en minúsculas y cuatro cuentas locales
+de demostración con inicial m elegida por el usuario. Al crear/editar usuarios,
+mostrar casillas con permisos del cargo y permitir excepciones individuales.
+
+MIGRACIONES
+000003_add_demo_accounts_and_normalized_email_check:
+users.is_demo default false; cuentas existentes permanecen normales; correo
+normalizado a minúsculas/trim y CHECK PostgreSQL que lo exige.
+000004_create_user_permission_overrides:
+user_permissions(user_id,permission_id,allowed); PK compuesta y FK restrictivas.
+Sin fila hereda del rol; true permite, false deniega. No modifica stock ni catálogos.
+
+IMPLEMENTACIÓN
+SystemSeeder añade supervisor/warehouse sin restaurar preferencias previas.
+User resuelve permisos del rol y excepciones; hasPermission verifica cuenta/rol
+activos y la habilitación especial de demostración. AccessService conserva
+identidad/rol/permisos/auditoría en transacción con bloqueo74126001 y protege
+la última administración efectiva. Personalizar un vendedor no cambia a los otros.
+Casillas por grupo/acción, carga de defaults al seleccionar cargo, botón para
+restaurar defaults, conservación de valores al validar y correos en minúscula.
+Campos de permisos requieren autorización de usuarios y gestión de roles.
+
+DEMONSTRACIÓN EXPLÍCITA
+Comando sicovi:crear-usuarios-demo --inicial=m, únicamente con bandera
+SICOVI_DEMO_ACCOUNTS=true y conexión efectiva local/testing permitida.
+Cuatro cuentas identificadas is_demo, con claves cortas públicas a petición del
+usuario. No se relajan reglas de contraseñas de cuentas normales. No se crean
+buzones Gmail ni se envían correos. Repetir el comando no restablece cuentas.
+Login, sesión anterior y autorización de demos se bloquean fuera del entorno.
+
+INSTALACIÓN/ACTUALIZACIÓN
+Conservar .env y APP_KEY; respaldar según README. Ejecutar migrate --force y
+db:seed --class=SystemSeeder --force; npm ci y npm run build; view:clear.
+Crear demos solo de forma opcional y local. Para operación real crear primero
+un administrador normal y desactivar la bandera. No usar migrate:fresh para
+actualizar; las pruebas sí utilizan sicovi_test mediante la guarda efectiva.
+
+PRUEBAS Y EVIDENCIA
+RoleProfilesTest, DemoAccountsTest, UserPermissionsTest y BaseDataTest cubren
+perfiles, correos, hashes, herencia/allow/deny, validación de payloads, aislamiento
+local, protección de administración y rollback. Resultados definitivos en
+docs/evidencias/manuel/roles_usuarios y matriz complementaria de esta actualización.
+No se atribuyen resultados antes de ejecutarlos. Sin módulos comerciales nuevos.
+
+RECUPERACIÓN Y LÍMITES
+Respaldos privados y restauración en destino vacío separado. Sin eliminaciones
+de cuentas o historial, resets de claves, modificaciones de otros proyectos,
+push, despliegue, PR o Jira. Recepción en otra PC y restauración cronometrada
+continúan pendientes de su ejecución real.
