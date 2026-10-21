@@ -21,7 +21,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'active', 'auth.session'])->group(function () {
     Route::get('/', function () {
         $catalogs = [];
-        foreach (['products' => [Product::class, 'Productos'], 'categories' => [Category::class, 'Categorías'], 'subcategories' => [Subcategory::class, 'Subcategorías'], 'brands' => [Brand::class, 'Marcas'], 'units' => [Unit::class, 'Unidades']] as $key => [$class, $name]) {
+        foreach (['products' => [Product::class, 'Productos'], 'categories' => [Category::class, 'Categorías'], 'subcategories' => [Subcategory::class, 'Subcategorías'], 'brands' => [Brand::class, 'Marcas'], 'units' => [Unit::class, 'Presentaciones']] as $key => [$class, $name]) {
             if (auth()->user()->hasPermission($key.'.view')) {
                 $catalogs[$key] = ['name' => $name, 'count' => $class::count()];
             }

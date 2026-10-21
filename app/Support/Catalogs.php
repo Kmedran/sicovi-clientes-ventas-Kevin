@@ -15,7 +15,7 @@ class Catalogs
             'categories' => [Category::class, 'Categorías'],
             'subcategories' => [Subcategory::class, 'Subcategorías'],
             'brands' => [Brand::class, 'Marcas'],
-            'units' => [Unit::class, 'Unidades'],
+            'units' => [Unit::class, 'Presentaciones'],
             default => abort(404),
         };
     }

@@ -1,15 +1,1328 @@
+
+/* ============================================================
+   SICOVI - SISTEMA INTEGRADO DE COMPRAS, VENTAS E INVENTARIO
+   Hoja principal de estilos
+   ============================================================ */
+
+/* 1. BOOTSTRAP */
 @import 'bootstrap/dist/css/bootstrap.min.css';
-.login-page{width:100%;min-height:100vh;min-height:100svh;aspect-ratio:1672/941;background-color:#eaf3fc;background-position:center;background-size:contain;background-repeat:no-repeat}
-.login-main{display:flex;align-items:center;justify-content:center;flex:1;padding:1.5rem 1rem}
-.login-panel{width:100%;max-width:400px;padding:1.75rem;background:rgb(255 255 255 / 50%);border:1px solid #dfe7f0;border-radius:14px;box-shadow:0 8px 28px #112d4908}
-.login-panel .login-input{min-height:48px}
-.login-input::placeholder{color:#6c757d;font-size:1rem;letter-spacing:0;opacity:1}
-.login-input:focus::placeholder{color:transparent}
-@keyframes sicovi-login-autofill{from{opacity:1}to{opacity:1}}
-.login-input:autofill{animation-name:sicovi-login-autofill;animation-duration:.01s}
-.login-input:-webkit-autofill{animation-name:sicovi-login-autofill;animation-duration:.01s}
-.login-heading{font-size:1.2rem;text-align:center;margin:0 0 1.5rem;letter-spacing:-.025em}
-@media(max-width:359px){.login-panel{padding:1.25rem}}
-:root{--navy:#112d49;--teal:#087f8c;--ink:#23394f;--muted:#66768a;--bs-primary:#1263bb;--bs-primary-rgb:18,99,187;--bs-body-bg:#f3f6fa;--bs-body-color:var(--ink)}
-body{font-family:Inter,Segoe UI,system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;overflow-wrap:anywhere}a{color:#1263bb}.app-header{background:var(--navy);border-bottom:3px solid #13a0ab}.navbar{min-height:86px}.brand{font-size:1.8rem;font-weight:800;letter-spacing:.04em;line-height:1}.brand span{display:block;font-size:.61rem;font-weight:400;letter-spacing:.03em;color:#c3d5e5;margin-top:.5rem}.navbar .nav-link{font-size:.84rem;padding:.65rem .55rem!important;color:#cad9e8}.navbar .nav-link.active,.navbar .nav-link:hover{color:white;background:#ffffff12;border-radius:6px}.account-nav{display:flex;align-items:center;gap:1rem;font-size:.8rem}.account-nav>a{color:#deebf7;text-decoration:none;max-width:160px}.main-content{max-width:1440px;padding:2.25rem 2rem 3rem;flex:1}.page-heading{display:flex;align-items:center;justify-content:space-between;gap:1.25rem;margin-bottom:1.75rem}h1{font-size:clamp(1.55rem,3vw,2rem);letter-spacing:-.035em;font-weight:750;margin-bottom:.5rem}.eyebrow{font-weight:750;font-size:.7rem;letter-spacing:.13em;color:var(--teal);margin-bottom:.65rem}.date-label{color:var(--muted);font-size:.85rem;white-space:nowrap}.surface,.filter-panel{background:#fff;border:1px solid #dde5ee;border-radius:12px;box-shadow:0 2px 3px #122d4903}.filter-panel{padding:1.25rem;margin-left:0;margin-right:0}.filter-panel>[class*=col-]{padding-top:0;margin-top:0}.form-label{font-size:.85rem;font-weight:650}.form-control,.form-select{background-color:#fff;min-height:42px}.btn{border-radius:7px;padding:.6rem 1rem;font-size:.85rem;font-weight:650}.btn-primary{background:#1263bb;border-color:#1263bb}.btn-primary:hover{background:#0b4e98}.btn-light{background:#eaf0f6;color:var(--ink)}.table{margin-bottom:0}.table thead th{background:#f7f9fc;color:var(--muted);font-size:.72rem;font-weight:750;text-transform:uppercase;letter-spacing:.035em;padding:1rem;white-space:nowrap;border-bottom-color:#dce5ee}.table td{padding:1rem;font-size:.88rem;border-color:#edf1f6}.table th:first-child,.table td:first-child{padding-left:1.4rem}.table-responsive{border-radius:12px}.record-link{font-weight:700;text-decoration:none}.record-link:hover{text-decoration:underline}.numeric{font-variant-numeric:tabular-nums;white-space:nowrap}.badge{font-weight:600;padding:.45em .7em;font-size:.7rem}.text-bg-success{background:#e2f3ed!important;color:#137557!important}.text-bg-secondary{background:#edf0f4!important;color:#526276!important}.empty-state{padding:3rem!important;text-align:center;color:var(--muted)}.catalog-card{display:flex;flex-direction:column;gap:.8rem;border:1px solid #dce5ee;border-radius:12px;background:white;padding:1.5rem;text-decoration:none;color:var(--ink);height:100%;transition:box-shadow .15s}.catalog-card:hover{box-shadow:0 5px 20px #112d4910;border-color:#a4bed8}.catalog-card-label{font-size:.9rem;font-weight:650}.catalog-card>strong{font-size:2.5rem;line-height:1;font-weight:750;letter-spacing:-.04em}.catalog-card>span:last-child{font-size:.8rem;color:#1263bb}.welcome-panel{display:flex;background:#e7f0f6;border-radius:12px;padding:2rem;gap:1.2rem;border:1px solid #d5e3ed}.welcome-panel h2{font-size:1.15rem;font-weight:700}.welcome-panel p{font-size:.9rem;color:#546a7e;max-width:700px}.panel-accent{background:var(--teal);width:5px;flex-shrink:0;border-radius:3px}.section-title{font-size:1.02rem;font-weight:750;margin-bottom:1.4rem;padding-bottom:1rem;border-bottom:1px solid #e5eaf0}.form-aside{background:#f5f8fc;border-radius:10px;padding:1.5rem}.form-actions{border-top:1px solid #e5eaf0;margin-top:1.5rem;padding-top:1.5rem;display:flex;gap:.75rem}.form-narrow{max-width:720px}.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem;margin-bottom:0}.detail-grid dt{font-size:.75rem;color:var(--muted);font-weight:500;margin-bottom:.3rem}.detail-grid dd{font-weight:650;margin-bottom:0;font-size:.9rem}.price-panel{background:var(--navy);color:#fff;padding:1.75rem;border-radius:12px}.price-panel>span{font-size:.85rem;color:#bed2e5}.price-panel>strong{display:block;font-size:2.1rem;margin-top:.5rem;letter-spacing:-.025em}.app-footer{padding:1.25rem 2rem;text-align:center;border-top:1px solid #dfe7f0;font-size:.72rem;color:#728296}.app-footer span{font-weight:750;color:#3d586f;margin-right:.5rem}.skip-link{position:absolute;top:-70px;left:1rem;background:white;padding:.8rem;z-index:1000}.skip-link:focus{top:1rem}:focus-visible{outline:3px solid #13a0ab!important;outline-offset:3px}.preserve-lines{white-space:pre-line}.login-container{max-width:460px;margin:2rem auto}.login-card{padding:2rem}.login-intro{text-align:center;margin-bottom:2rem}.login-intro h1{font-size:1.7rem}.alert{font-size:.9rem}.pagination{flex-wrap:wrap}.login-shell,.auth-card{max-width:480px;margin:2rem auto}.permissions-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
-@media(min-width:992px) and (max-width:1400px){.navbar .nav-link{font-size:.75rem;padding:.6rem .38rem!important}.brand span{max-width:180px}.account-nav{gap:.5rem}.account-nav>a{max-width:90px}}@media(max-width:991px){.navbar-collapse{padding:1rem 0}.account-nav{border-top:1px solid #ffffff24;padding-top:1rem;margin-top:.75rem}.filter-panel>[class*=col-]{margin-top:1rem}.filter-panel{padding-top:.25rem}}@media(max-width:575px){.main-content{padding:1.5rem 1rem 2rem}.page-heading{align-items:flex-start;flex-direction:column}.page-heading>.d-flex{flex-wrap:wrap}.date-label{display:none}.brand{font-size:1.65rem}.welcome-panel{padding:1.25rem}.surface.p-4{padding:1.25rem!important}.form-aside{padding:1.2rem}.detail-grid{grid-template-columns:1fr}.app-footer{padding:1rem}.login-card{padding:1.25rem}.login-container{margin:.5rem auto}.catalog-card{padding:1.25rem}h1{overflow-wrap:anywhere}.table{min-width:540px}.filter-panel{margin-left:0;margin-right:0}}
+
+
+/* ============================================================
+   2. VARIABLES GLOBALES
+   ============================================================ */
+
+:root {
+    --navy: #112d49;
+    --teal: #087f8c;
+    --ink: #23394f;
+    --muted: #66768a;
+
+    --bs-primary: #1263bb;
+    --bs-primary-rgb: 18, 99, 187;
+    --bs-body-bg: #f3f6fa;
+    --bs-body-color: var(--ink);
+}
+
+
+/* ============================================================
+   3. ESTILOS GENERALES
+   ============================================================ */
+
+body {
+    font-family: Inter, Segoe UI, system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-wrap: anywhere;
+}
+
+a {
+    color: #1263bb;
+}
+
+h1 {
+    font-size: clamp(1.55rem, 3vw, 2rem);
+    letter-spacing: -0.035em;
+    font-weight: 750;
+    margin-bottom: 0.5rem;
+    overflow-wrap: anywhere;
+}
+
+:focus-visible {
+    outline: 3px solid #13a0ab !important;
+    outline-offset: 3px;
+}
+
+.preserve-lines {
+    white-space: pre-line;
+}
+
+
+/* ============================================================
+   4. LOGIN - PANTALLA DE ACCESO
+   ============================================================ */
+
+.login-page {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    background-color: #eaf3fc;
+    background-image: url('/images/loginDesktop.png');
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.login-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 1.5rem 1rem;
+}
+
+.login-panel {
+    width: 100%;
+    max-width: 400px;
+    padding: 1.75rem;
+
+    background: rgb(255 255 255 / 50%);
+    border: 1px solid #dfe7f0;
+    border-radius: 14px;
+    box-shadow: 0 8px 28px #112d4908;
+}
+
+.login-panel .login-input {
+    min-height: 48px;
+}
+
+.login-heading {
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 0 0 1.5rem;
+    letter-spacing: -0.025em;
+}
+
+
+/* 4.1. Indicadores de usuario y contraseña */
+
+.login-input::placeholder {
+    color: #6c757d;
+    font-size: 1rem;
+    letter-spacing: 0;
+    opacity: 1;
+}
+
+.login-input:focus::placeholder {
+    color: transparent;
+}
+
+
+/* 4.2. Detección visual de autocompletado */
+
+@keyframes sicovi-login-autofill {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.login-input:autofill {
+    animation-name: sicovi-login-autofill;
+    animation-duration: 0.01s;
+}
+
+.login-input:-webkit-autofill {
+    animation-name: sicovi-login-autofill;
+    animation-duration: 0.01s;
+}
+
+
+/* 4.3. Componentes de acceso auxiliares */
+
+.login-container {
+    max-width: 460px;
+    margin: 2rem auto;
+}
+
+.login-card {
+    padding: 2rem;
+}
+
+.login-intro {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-intro h1 {
+    font-size: 1.7rem;
+}
+
+.login-shell,
+.auth-card {
+    max-width: 480px;
+    margin: 2rem auto;
+}
+
+
+/* ============================================================
+   5. ENCABEZADO Y NAVEGACIÓN
+   ============================================================ */
+
+.app-header {
+    background: var(--navy);
+    border-bottom: 3px solid #13a0ab;
+}
+
+.navbar {
+    min-height: 86px;
+}
+
+.brand {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    line-height: 1;
+}
+
+.brand span {
+    display: block;
+    font-size: 0.61rem;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    color: #c3d5e5;
+    margin-top: 0.5rem;
+}
+
+.navbar .nav-link {
+    font-size: 0.84rem;
+    padding: 0.65rem 0.55rem !important;
+    color: #cad9e8;
+}
+
+.navbar .nav-link.active,
+.navbar .nav-link:hover {
+    color: white;
+    background: #ffffff12;
+    border-radius: 6px;
+}
+
+.account-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.8rem;
+}
+
+.account-nav > a {
+    color: #deebf7;
+    text-decoration: none;
+    max-width: 160px;
+}
+
+
+/* ============================================================
+   6. CONTENIDO PRINCIPAL
+   ============================================================ */
+
+.main-content {
+    max-width: 1440px;
+    padding: 2.25rem 2rem 3rem;
+    flex: 1;
+}
+
+.page-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+}
+
+.eyebrow {
+    font-weight: 750;
+    font-size: 0.7rem;
+    letter-spacing: 0.13em;
+    color: var(--teal);
+    margin-bottom: 0.65rem;
+}
+
+.date-label {
+    color: var(--muted);
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.section-title {
+    font-size: 1.02rem;
+    font-weight: 750;
+    margin-bottom: 1.4rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5eaf0;
+}
+
+
+/* ============================================================
+   7. PANELES Y SUPERFICIES
+   ============================================================ */
+
+.surface,
+.filter-panel {
+    background: #fff;
+    border: 1px solid #dde5ee;
+    border-radius: 12px;
+    box-shadow: 0 2px 3px #122d4903;
+}
+
+.filter-panel {
+    padding: 1.25rem;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.filter-panel > [class*=col-] {
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.form-aside {
+    background: #f5f8fc;
+    border-radius: 10px;
+    padding: 1.5rem;
+}
+
+.welcome-panel {
+    display: flex;
+    background: #e7f0f6;
+    border-radius: 12px;
+    padding: 2rem;
+    gap: 1.2rem;
+    border: 1px solid #d5e3ed;
+}
+
+.welcome-panel h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.welcome-panel p {
+    font-size: 0.9rem;
+    color: #546a7e;
+    max-width: 700px;
+}
+
+.panel-accent {
+    background: var(--teal);
+    width: 5px;
+    flex-shrink: 0;
+    border-radius: 3px;
+}
+
+
+/* ============================================================
+   8. FORMULARIOS Y BOTONES
+   ============================================================ */
+
+.form-label {
+    font-size: 0.85rem;
+    font-weight: 650;
+}
+
+.form-control,
+.form-select {
+    background-color: #fff;
+    min-height: 42px;
+}
+
+.form-narrow {
+    max-width: 720px;
+}
+
+.form-actions {
+    border-top: 1px solid #e5eaf0;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn {
+    border-radius: 7px;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 650;
+}
+
+.btn-primary {
+    background: #1263bb;
+    border-color: #1263bb;
+}
+
+.btn-primary:hover {
+    background: #0b4e98;
+}
+
+.btn-light {
+    background: #eaf0f6;
+    color: var(--ink);
+}
+
+.alert {
+    font-size: 0.9rem;
+}
+
+
+/* ============================================================
+   9. TABLAS Y LISTADOS
+   ============================================================ */
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background: #f7f9fc;
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: 0.035em;
+    padding: 1rem;
+    white-space: nowrap;
+    border-bottom-color: #dce5ee;
+}
+
+.table td {
+    padding: 1rem;
+    font-size: 0.88rem;
+    border-color: #edf1f6;
+}
+
+.table th:first-child,
+.table td:first-child {
+    padding-left: 1.4rem;
+}
+
+.table-responsive {
+    border-radius: 12px;
+}
+
+.record-link {
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.record-link:hover {
+    text-decoration: underline;
+}
+
+.numeric {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.pagination {
+    flex-wrap: wrap;
+}
+
+
+/* ============================================================
+   10. ETIQUETAS Y ESTADOS
+   ============================================================ */
+
+.badge {
+    font-weight: 600;
+    padding: 0.45em 0.7em;
+    font-size: 0.7rem;
+}
+
+.text-bg-success {
+    background: #e2f3ed !important;
+    color: #137557 !important;
+}
+
+.text-bg-secondary {
+    background: #edf0f4 !important;
+    color: #526276 !important;
+}
+
+.empty-state {
+    padding: 3rem !important;
+    text-align: center;
+    color: var(--muted);
+}
+
+
+/* ============================================================
+   11. TARJETAS DE CATÁLOGOS
+   ============================================================ */
+
+.catalog-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    border: 1px solid #dce5ee;
+    border-radius: 12px;
+    background: white;
+    padding: 1.5rem;
+
+    text-decoration: none;
+    color: var(--ink);
+    height: 100%;
+
+    transition: box-shadow 0.15s;
+}
+
+.catalog-card:hover {
+    box-shadow: 0 5px 20px #112d4910;
+    border-color: #a4bed8;
+}
+
+.catalog-card-label {
+    font-size: 0.9rem;
+    font-weight: 650;
+}
+
+.catalog-card > strong {
+    font-size: 2.5rem;
+    line-height: 1;
+    font-weight: 750;
+    letter-spacing: -0.04em;
+}
+
+.catalog-card > span:last-child {
+    font-size: 0.8rem;
+    color: #1263bb;
+}
+
+
+/* ============================================================
+   12. DETALLE DE REGISTROS
+   ============================================================ */
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 0;
+}
+
+.detail-grid dt {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+}
+
+.detail-grid dd {
+    font-weight: 650;
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+
+/* ============================================================
+   13. PANEL DE PRECIOS
+   ============================================================ */
+
+.price-panel {
+    background: var(--navy);
+    color: #fff;
+    padding: 1.75rem;
+    border-radius: 12px;
+}
+
+.price-panel > span {
+    font-size: 0.85rem;
+    color: #bed2e5;
+}
+
+.price-panel > strong {
+    display: block;
+    font-size: 2.1rem;
+    margin-top: 0.5rem;
+    letter-spacing: -0.025em;
+}
+
+
+/* ============================================================
+   14. PERMISOS DE USUARIOS
+   ============================================================ */
+
+.permissions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+
+/* ============================================================
+   15. PIE DE PÁGINA
+   ============================================================ */
+
+.app-footer {
+    padding: 1.25rem 2rem;
+    text-align: center;
+    border-top: 1px solid #dfe7f0;
+    font-size: 0.72rem;
+    color: #728296;
+}
+
+.app-footer span {
+    font-weight: 750;
+    color: #3d586f;
+    margin-right: 0.5rem;
+}
+
+
+/* ============================================================
+   16. ACCESIBILIDAD
+   ============================================================ */
+
+.skip-link {
+    position: absolute;
+    top: -70px;
+    left: 1rem;
+    background: white;
+    padding: 0.8rem;
+    z-index: 1000;
+}
+
+.skip-link:focus {
+    top: 1rem;
+}
+
+
+/* ============================================================
+   17. DISEÑO RESPONSIVO
+   ============================================================ */
+
+/* 17.1. Escritorio mediano */
+
+@media (min-width: 992px) and (max-width: 1400px) {
+
+    .navbar .nav-link {
+        font-size: 0.75rem;
+        padding: 0.6rem 0.38rem !important;
+    }
+
+    .brand span {
+        max-width: 180px;
+    }
+
+    .account-nav {
+        gap: 0.5rem;
+    }
+
+    .account-nav > a {
+        max-width: 90px;
+    }
+}
+
+
+/* 17.2. Tablets y pantallas medianas */
+
+@media (max-width: 991px) {
+
+    .navbar-collapse {
+        padding: 1rem 0;
+    }
+
+    .account-nav {
+        border-top: 1px solid #ffffff24;
+        padding-top: 1rem;
+        margin-top: 0.75rem;
+    }
+
+    .filter-panel > [class*=col-] {
+        margin-top: 1rem;
+    }
+
+    .filter-panel {
+        padding-top: 0.25rem;
+    }
+}
+
+
+/* 17.3. Teléfonos móviles */
+
+@media (max-width: 575px) {
+
+    .main-content {
+        padding: 1.5rem 1rem 2rem;
+    }
+
+    .page-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .page-heading > .d-flex {
+        flex-wrap: wrap;
+    }
+
+    .date-label {
+        display: none;
+    }
+
+    .brand {
+        font-size: 1.65rem;
+    }
+
+    .welcome-panel {
+        padding: 1.25rem;
+    }
+
+    .surface.p-4 {
+        padding: 1.25rem !important;
+    }
+
+    .form-aside {
+        padding: 1.2rem;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .app-footer {
+        padding: 1rem;
+    }
+
+    .login-card {
+        padding: 1.25rem;
+    }
+
+    .login-container {
+        margin: 0.5rem auto;
+    }
+
+    .catalog-card {
+        padding: 1.25rem;
+    }
+
+    .table {
+        min-width: 540px;
+    }
+
+    .filter-panel {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+
+/* 17.4. Login adaptado a celulares y tablets pequeñas */
+
+@media (max-width: 768px) {
+
+    .login-page {
+        background-image: url('/images/loginCelular.png');
+        background-position: center center;
+        background-size: cover;
+    }
+
+    .login-main {
+        padding: 1rem;
+    }
+
+    .login-panel {
+        max-width: 400px;
+        padding: 1.5rem;
+    }
+}
+
+
+/* 17.5. Pantallas muy estrechas */
+
+@media (max-width: 359px) {
+
+    .login-panel {
+        padding: 1.25rem;
+    }
+}
+
+/* ============================================================
+   SICOVI - MANUEL-08: MENÚ LATERAL E IDENTIDAD VISUAL
+
+   Diseño: fondo de pantallas blanco, menú azul hielo,
+   elementos activos con azul/turquesa, dos logos reales:
+   - sicovi-logo.png  : logo completo
+   - sicovi-logo2.png : isotipo, sin letras
+
+   El menú no agrega ningún recuadro detrás del logotipo.
+   Estos estilos solo afectan el layout interno sc-body.
+   El fondo del login MANUEL-07 se mantiene independiente.
+   ============================================================ */
+
+body.sc-body {
+    --sc-navy: #092e54;
+    --sc-blue: #2166e5;
+    --sc-teal: #06a8a9;
+    --sc-sidebar-bg: #edf6fb;
+    --sc-sidebar-border: #d9e8f1;
+    --sc-text-muted: #60778b;
+    --bs-body-bg: #ffffff;
+    --bs-body-color: #23394f;
+    display: block;
+    min-height: 100vh;
+    background: #ffffff;
+    color: var(--sc-navy);
+}
+
+.sc-shell {
+    display: flex;
+    min-height: 100vh;
+    background: #ffffff;
+}
+
+/* Menú principal: el mismo fondo para menú y logo. */
+.sc-sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 265px;
+    width: 265px;
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.9rem 0.7rem;
+    background: var(--sc-sidebar-bg);
+    color: var(--sc-navy);
+    border-right: 1px solid var(--sc-sidebar-border);
+    transition: width .2s ease, flex-basis .2s ease;
+}
+
+.sc-sidebar__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+    min-height: 72px;
+    margin-bottom: 1rem;
+    padding: 0.35rem 0.55rem;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+}
+
+/* Logo completo y símbolo contraído: dos imágenes distintas. */
+.sc-brand {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    text-decoration: none;
+}
+
+.sc-brand__full {
+    display: block;
+    width: 168px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.sc-brand__icon {
+    display: none;
+    width: 41px;
+    height: 41px;
+    object-fit: contain;
+}
+
+.sc-collapse,
+.sc-close,
+.sc-mobile-open {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    color: var(--sc-navy);
+    background: transparent;
+    cursor: pointer;
+}
+
+.sc-collapse:hover,
+.sc-close:hover,
+.sc-mobile-open:hover {
+    background: #d8eaf5;
+    color: var(--sc-blue);
+}
+
+.sc-icon {
+    width: 21px;
+    height: 21px;
+    flex: 0 0 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Módulos y mantenimientos con estados de alto contraste. */
+.sc-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.36rem;
+    flex: 1;
+}
+
+.sc-nav__item,
+.sc-group > summary {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    width: 100%;
+    min-height: 46px;
+    padding: 0.68rem 0.8rem;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--sc-navy);
+    text-decoration: none;
+    font-size: 0.91rem;
+    font-weight: 650;
+    text-align: left;
+    cursor: pointer;
+}
+
+.sc-nav__item:hover,
+.sc-group > summary:hover {
+    background: #dbeefa;
+    color: #0a56bb;
+}
+
+.sc-nav__item.is-active,
+.sc-group > summary.is-active,
+.sc-group[open] > summary {
+    background: #d7eafb;
+    color: #1455b3;
+}
+
+.sc-nav__item.is-active,
+.sc-group > summary.is-active {
+    box-shadow: inset 3px 0 0 var(--sc-teal);
+}
+
+.sc-group > summary {
+    list-style: none;
+    user-select: none;
+}
+
+.sc-group > summary::marker,
+.sc-group > summary::-webkit-details-marker {
+    display: none;
+}
+
+.sc-label {
+    min-width: 0;
+    flex: 1;
+    white-space: nowrap;
+}
+
+.sc-chevron {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform .2s ease;
+}
+
+.sc-group[open] .sc-chevron {
+    transform: rotate(90deg);
+}
+
+.sc-submenu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin: 0.22rem 0 0.5rem 1.6rem;
+    padding-left: 0.7rem;
+    border-left: 2px solid #c5dfed;
+}
+
+.sc-submenu a {
+    display: block;
+    padding: 0.58rem 0.7rem;
+    border-radius: 7px;
+    font-size: 0.86rem;
+    text-decoration: none;
+    color: #31536c;
+}
+
+.sc-submenu a:hover {
+    background: #daedf7;
+    color: #124ea4;
+}
+
+.sc-submenu a.is-active {
+    background: #d2e9fb;
+    color: #0e51b0;
+    font-weight: 700;
+}
+
+.sc-sidebar__footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.22rem;
+    padding-top: 0.75rem;
+    margin-top: 0.8rem;
+    border-top: 1px solid var(--sc-sidebar-border);
+}
+
+.sc-sidebar__footer form {
+    margin: 0;
+}
+
+.sc-logout {
+    font-family: inherit;
+}
+
+/* Pantallas de SICOVI: el blanco es la superficie principal. */
+.sc-main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    background: #ffffff;
+}
+
+.sc-topbar {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-height: 68px;
+    padding: 0.85rem 1.5rem;
+    background: #ffffff;
+    border-bottom: 1px solid #e2eaf0;
+}
+
+.sc-topbar__title {
+    color: var(--sc-navy);
+    font-size: 1.05rem;
+    font-weight: 750;
+}
+
+.sc-topbar__user {
+    color: #365773;
+    font-size: 0.83rem;
+    text-decoration: none;
+    margin-left: auto;
+    max-width: 42%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.sc-topbar__user:hover {
+    color: var(--sc-blue);
+}
+
+.sc-main > .main-content {
+    width: 100%;
+    margin-inline: auto;
+    background: #ffffff;
+}
+
+.sc-body .surface,
+.sc-body .filter-panel,
+.sc-body .catalog-card {
+    background: #ffffff;
+    border-color: #dfe9f1;
+}
+
+.sc-body .btn-primary {
+    background-color: var(--sc-blue);
+    border-color: var(--sc-blue);
+}
+
+.sc-body .btn-primary:hover {
+    background-color: #1552bf;
+    border-color: #1552bf;
+}
+
+.sc-body .catalog-card > span:last-child,
+.sc-body .record-link {
+    color: var(--sc-blue);
+}
+
+.sc-body .eyebrow {
+    color: #087f8c;
+}
+
+.sc-main > .app-footer {
+    margin-top: auto;
+    background: #ffffff;
+    border-top-color: #e2eaf0;
+}
+
+.sc-mobile-open,
+.sc-close,
+.sc-overlay {
+    display: none;
+}
+
+.sc-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1040;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: rgba(9, 25, 40, 0.52);
+}
+
+/* Icon-only mode: show the separate isotipo instead of clipping logo. */
+@media (min-width: 992px) {
+    body.sc-collapsed .sc-sidebar {
+        flex-basis: 76px;
+        width: 76px;
+        padding: 0.65rem 0.45rem;
+    }
+
+    body.sc-collapsed .sc-sidebar__header {
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.3rem;
+        min-height: 100px;
+        margin-bottom: 0.6rem;
+        padding: 0.35rem 0;
+    }
+
+    body.sc-collapsed .sc-brand {
+        flex: 0 0 auto;
+        width: 47px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    body.sc-collapsed .sc-brand__full {
+        display: none;
+    }
+
+    body.sc-collapsed .sc-brand__icon {
+        display: block;
+    }
+
+    body.sc-collapsed .sc-collapse .sc-icon {
+        transform: rotate(180deg);
+    }
+
+    body.sc-collapsed .sc-nav__item,
+    body.sc-collapsed .sc-group > summary {
+        justify-content: center;
+        gap: 0;
+        padding-inline: 0.4rem;
+    }
+
+    body.sc-collapsed .sc-nav .sc-label,
+    body.sc-collapsed .sc-sidebar__footer .sc-label,
+    body.sc-collapsed .sc-chevron,
+    body.sc-collapsed .sc-submenu {
+        display: none;
+    }
+}
+
+/* Tablet y teléfono: drawer con logo completo. */
+@media (max-width: 991px) {
+    body.sc-mobile-opened {
+        overflow: hidden;
+    }
+
+    .sc-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: min(285px, 86vw);
+        height: 100vh;
+        height: 100dvh;
+        transform: translateX(-101%);
+        transition: transform .2s ease;
+        box-shadow: 8px 0 22px rgba(8, 24, 40, 0.16);
+    }
+
+    body.sc-mobile-opened .sc-sidebar {
+        transform: translateX(0);
+    }
+
+    .sc-collapse {
+        display: none;
+    }
+
+    .sc-close,
+    .sc-mobile-open {
+        display: inline-flex;
+    }
+
+    body.sc-mobile-opened .sc-overlay {
+        display: block;
+    }
+
+    .sc-main {
+        width: 100%;
+    }
+
+    .sc-topbar {
+        padding: 0.75rem 1rem;
+    }
+
+    .sc-topbar__user {
+        max-width: 36%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sc-sidebar,
+    .sc-chevron {
+        transition: none;
+    }
+}\n
+/* ============================================================
+   SICOVI - REVISIÓN RESPONSIVA MANUEL-08
+   Solo afecta la interfaz interna (no modifica guest/login).
+   ============================================================ */
+
+/* Barra superior y contenido: reducir sin desbordamiento horizontal. */
+.sc-body .sc-main,
+.sc-body .sc-topbar,
+.sc-body .sc-topbar__title {
+    min-width: 0;
+}
+
+.sc-body .sc-topbar__title {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sc-body .sc-topbar__user {
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+/* Las tablas grandes se desplazan en su contenedor, no toda la página. */
+.sc-body .table-responsive {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.sc-body .sc-sidebar {
+    overscroll-behavior-y: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #bdd5e4 transparent;
+}
+
+/* Navegación accesible por teclado. */
+.sc-body .sc-nav__item:focus-visible,
+.sc-body .sc-group > summary:focus-visible,
+.sc-body .sc-submenu a:focus-visible,
+.sc-body .sc-collapse:focus-visible,
+.sc-body .sc-close:focus-visible,
+.sc-body .sc-mobile-open:focus-visible {
+    outline: 3px solid var(--sc-blue) !important;
+    outline-offset: 2px;
+}
+
+/* Evita que los botones cortos pierdan sus palabras. */
+.sc-body .filter-panel .btn {
+    white-space: nowrap;
+    overflow-wrap: normal;
+}
+
+@media (max-width: 767.98px) {
+    /* Catálogos y productos: apilar filtros en pantallas estrechas. */
+    .sc-body .filter-panel > .col-6 {
+        flex: 0 0 100%;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .sc-body .filter-panel > .d-flex.gap-2 {
+        width: 100%;
+        flex-wrap: wrap;
+        align-items: stretch !important;
+    }
+
+    .sc-body .filter-panel > .d-flex.gap-2 > .btn {
+        flex: 1 1 115px;
+        min-width: 0;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    /* La lista de usuarios también utiliza un filtro con botones. */
+    .sc-body form.row.g-3 > .d-flex.gap-2 > .btn {
+        flex: 1 1 115px;
+        min-width: 0;
+        white-space: nowrap;
+    }
+
+    .sc-body form.row.g-3 > .d-flex.gap-2 {
+        flex-wrap: wrap;
+    }
+
+    /* Acciones y formularios: usar segunda fila si no caben. */
+    .sc-body .form-actions,
+    .sc-body .page-heading > .d-flex,
+    .sc-body form > .d-flex.gap-2.mt-4 {
+        flex-wrap: wrap;
+    }
+
+    .sc-body .form-actions > .btn,
+    .sc-body form > .d-flex.gap-2.mt-4 > .btn {
+        flex: 1 1 130px;
+        min-width: 0;
+    }
+
+    .sc-body .page-heading > a.btn {
+        align-self: stretch;
+        text-align: center;
+    }
+
+    .sc-body .card-body.p-4,
+    .sc-body .surface.p-4 {
+        padding: 1.15rem !important;
+    }
+
+    .sc-body .welcome-panel {
+        padding: 1.2rem;
+    }
+}
+
+@media (max-width: 420px) {
+    /* El nombre completo puede consultarse desde "Mi cuenta" en el menú. */
+    .sc-body .sc-topbar__user {
+        display: none;
+    }
+
+    .sc-body .sc-topbar__title {
+        font-size: 1rem;
+    }
+
+    .sc-body .main-content {
+        padding: 1.2rem 0.85rem 1.8rem;
+    }
+}

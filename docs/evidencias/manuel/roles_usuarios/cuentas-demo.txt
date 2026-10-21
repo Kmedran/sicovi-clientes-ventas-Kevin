@@ -1,9 +1,0 @@
-Uso exclusivo de demostración local. Las cuentas existentes conservan sus contraseñas y estado.
-+-----------------------+------------+--------+
-| Correo                | Rol        | Estado |
-+-----------------------+------------+--------+
-| adminm@gmail.com      | admin      | Creada |
-| vendedorm@gmail.com   | seller     | Creada |
-| supervisorm@gmail.com | supervisor | Creada |
-| bodegam@gmail.com     | warehouse  | Creada |
-+-----------------------+------------+--------+
