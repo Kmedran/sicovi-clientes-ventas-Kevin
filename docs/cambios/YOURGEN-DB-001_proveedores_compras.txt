@@ -1,0 +1,191 @@
+SICOVI - FORMATO OBLIGATORIO DE CAMBIO DE BASE DE DATOS
+========================================================
+
+ID DEL CAMBIO: YOURGUEN-DB-001
+AUTOR: Yourgen (YOURGEN)
+FECHA: 2026-10-21
+MODULO: Proveedores / Compras
+RAMA: feature/yourgen-compras-inventario (paso en yourgen/db-001-esquema)
+COMMIT: b4de9c6 (migracion y TXT inicial). Este TXT se corrigio en un commit posterior.
+
+1. RESUMEN Y JUSTIFICACION
+Agrega las tablas de proveedores y compras de V1 y el registro comun de idempotencia.
+  - suppliers            : mantenimiento de proveedores (se desactivan, no se borran).
+  - purchases            : encabezado de compra. En V1 confirmar = recibir (contexto
+                           general 5.6 y RN-16): no hay orden de compra separada ni
+                           recepciones parciales. Estados: draft, confirmed, voided.
+  - purchase_items       : detalle (producto, cantidad, costo unitario, importe).
+  - idempotency_records  : registro comun (contexto 8.1) para confirmaciones, ajustes y
+                           anulaciones. Kevin y Luis lo reutilizan; NO deben crearlo de nuevo.
+La migracion es ADITIVA: no modifica tablas ni migraciones de Manuel (000001 a 000005).
+NO toca inventory_balances ni crea movimientos: eso es YOURGUEN-DB-002.
+
+2. ESTADO PREVIO Y PRERREQUISITOS
+Requiere el codigo base 24945ad y las 5 migraciones de Manuel aplicadas
+(la migracion verifica que existan users, warehouses, products y units y que el
+esquema activo sea sicovi; si no, se detiene sin cambiar nada).
+Requiere respaldo: si. No incluir credenciales, .env ni respaldos en Git.
+Nota de nomenclatura: las tablas siguen el contexto general 8.1 (purchase_items).
+Los manuales de Kevin y Luis hablan de *_lines/sale_lines; prevalece el contexto general.
+
+3. ARCHIVOS DE MIGRACION NUEVOS
+- database/migrations/2026_10_21_100000_create_suppliers_purchases_and_idempotency_tables.php
+No se reescribio ninguna migracion ya compartida.
+
+4. CODIGO DE BASE DE DATOS
+La migracion versionada de la seccion 3 contiene el codigo completo (PHP + SQL de
+restricciones, indices y triggers). No hay SQL manual complementario.
+Resumen del esquema creado:
+
+  suppliers
+    id bigint PK | code varchar(30) UNIQUE, default 'PRV-' || lpad(secuencia,6,'0')
+    name varchar(180) NOT NULL | tax_id varchar(30) NOT NULL | contact_name varchar(150) NULL
+    phone varchar(30) NULL | email varchar(254) NULL | address text NULL | notes text NULL
+    active boolean default true | created_at, updated_at timestamptz
+    UNIQUE: NIT normalizado (sin espacios ni guiones, minusculas); NIT obligatorio
+    CHECK: name/code no vacios; NIT no vacio tras normalizar; opcionales no vacios si existen
+    Indices: name; (active, name)
+
+  purchases
+    id bigint PK | code varchar(30) UNIQUE, default 'COM-' || lpad(secuencia,6,'0')
+    supplier_id FK suppliers (RESTRICT) | warehouse_id FK warehouses (RESTRICT)
+    document_date date | supplier_reference varchar(60) NULL
+    state varchar(20) default 'draft' CHECK IN (draft, confirmed, voided)
+    version integer default 0 CHECK >= 0 (control de edicion concurrente del borrador)
+    notes text NULL | total numeric(16,2) default 0 CHECK >= 0
+    created_by FK users | confirmed_by FK users NULL | confirmed_at timestamptz NULL
+    confirmation_idempotency_key varchar(80) NULL
+    voided_by FK users NULL | voided_at timestamptz NULL | void_reason text NULL
+    UNIQUE parcial (supplier_id, referencia normalizada) cuando existe; NO se libera al anular
+    UNIQUE parcial (confirmed_by, confirmation_idempotency_key)
+    CHECK de consistencia de estado: draft sin datos de confirmacion/anulacion;
+          confirmed con responsable y fecha; voided con ambos y motivo no vacio
+    Indices: (supplier_id, document_date); (state, document_date); document_date; created_by
+
+  purchase_items
+    id bigint PK | purchase_id FK (RESTRICT) | product_id FK (RESTRICT) | unit_id FK (RESTRICT)
+    product_sku varchar(50) | product_name varchar(180)   (copia historica)
+    quantity numeric(14,3) CHECK > 0 | unit_cost numeric(14,2) CHECK >= 0
+    line_total numeric(16,2) CHECK line_total = round(quantity * unit_cost, 2)
+    UNIQUE (purchase_id, product_id): una linea por producto
+    Indice: product_id
+
+  idempotency_records
+    id bigint PK | user_id FK users | action varchar(60) | idempotency_key varchar(80)
+    request_hash char(64) CHECK sha256 hexadecimal minuscula
+    result_type varchar(60) NULL | result_id bigint NULL (ambos NULL o ambos informados)
+    created_at timestamptz default now()
+    UNIQUE (user_id, action, idempotency_key)
+
+  Secuencias: supplier_code_seq, purchase_code_seq (MAXVALUE 999999, NO CYCLE).
+  Los numeros pueden tener saltos (un INSERT fallido consume numero); es esperado (contexto 8.3).
+
+  Triggers de defensa (RN-07, RN-14, estados):
+    purchases_state_guard        : una anulada no cambia de estado; una confirmada no vuelve a
+                                   borrador; el contenido comercial confirmado/anulado y los datos
+                                   de anulacion no se modifican.
+    purchases_no_delete_confirmed: no se eliminan compras confirmadas ni anuladas.
+    purchase_items_draft_only    : las lineas solo se insertan/editan/borran con la compra en
+                                   borrador (usa FOR SHARE para esperar una confirmacion en curso).
+
+5. COMANDOS PARA QUE CADA COMPANERO ACTUALICE SU BD LOCAL
+Confirmar primero la integracion de Git y hacer respaldo privado:
+  New-Item -ItemType Directory -Force C:\RESPALDOS_PRIVADOS
+  pg_dump -h 127.0.0.1 -p 5432 -U sicovi_app -W -d sicovi_local -Fc -f C:\RESPALDOS_PRIVADOS\sicovi_antes_YOURGEN_DB001.dump
+  (usar el puerto real de cada PC)
+
+cd [RUTA_LOCAL_DEL_PROYECTO]
+.\scripts\php.ps1 artisan config:clear
+.\scripts\php.ps1 artisan migrate --force
+.\scripts\php.ps1 artisan migrate:status
+.\scripts\php.ps1 scripts/diagnostico.php
+
+No es necesario ejecutar SystemSeeder para esta migracion (no agrega permisos todavia;
+los permisos suppliers.* y purchases.* llegan con el codigo del modulo y su SystemSeeder).
+No ejecutar DemoSeeder como paso de actualizacion.
+
+6. EFECTO ESPERADO Y VALIDACION
+migrate:status debe mostrar 2026_10_21_100000_create_suppliers_purchases_and_idempotency_tables como Ran.
+Consultas de comprobacion (psql -h 127.0.0.1 -p 5432 -U sicovi_app -d sicovi_local -W):
+
+  SELECT current_database(), current_schema();
+  SELECT table_name FROM information_schema.tables
+   WHERE table_schema = 'sicovi'
+     AND table_name IN ('suppliers','purchases','purchase_items','idempotency_records') ORDER BY 1;
+     -- esperado: 4 filas
+  SELECT conname FROM pg_constraint WHERE conrelid IN
+   ('sicovi.purchases'::regclass,'sicovi.purchase_items'::regclass) AND contype = 'c' ORDER BY 1;
+  SELECT tgname FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN
+   ('sicovi.purchases'::regclass,'sicovi.purchase_items'::regclass) ORDER BY 1;
+     -- esperado: purchase_items_draft_only, purchases_no_delete_confirmed, purchases_state_guard
+  SELECT COUNT(*) FROM sicovi.inventory_balances;   -- igual antes y despues
+  SELECT COUNT(*) FROM sicovi.users;                -- igual antes y despues
+  SELECT COUNT(*) FROM sicovi.audit_events;         -- igual antes y despues
+
+Guardar los conteos antes y despues: la migracion no debe cambiar ninguno.
+
+7. COMPATIBILIDAD, RIESGOS Y DATOS EXISTENTES
+- Solo crea objetos nuevos: conserva todos los datos existentes; no exige backfill.
+- No cambia seeders, permisos ni tablas de Manuel en este cambio.
+- Usa COLLATE pg_catalog.pg_c_utf8 igual que la migracion 000002: requiere PostgreSQL 17
+  (el que usa el proyecto). En PostgreSQL 16 o inferior la migracion falla al crear.
+- Si alguien ya creo manualmente tablas con estos nombres, la migracion falla sin
+  sobrescribir; resolver con el autor antes de continuar.
+- Decisiones de diseno que el equipo debe confirmar (afectan a Kevin/Luis):
+    a) idempotency_records la crea este cambio; Kevin/Luis la reutilizan.
+    b) Estados en BD: draft / confirmed / voided (UI: Borrador / Confirmada / Anulada).  [ACORDADO]
+    c) Descartar un borrador = borrar fisicamente lineas y encabezado solo en borrador,
+       sin afectar stock y con auditoria; no existe estado discarded.               [ACORDADO]
+    d) Una linea por producto; si se repite en captura, se consolida.               [ACORDADO]
+    e) NIT de proveedor OBLIGATORIO, normalizado y unico.                           [ACORDADO]
+    f) La referencia del comprobante (proveedor + referencia) sigue siendo unica
+       aunque la compra se anule, para no duplicar historicos.                      [ACORDADO]
+- Regla para el equipo: toda migracion que cree funciones o tipos de PostgreSQL debe poder
+  repetirse tras migrate:fresh en sicovi_test, que elimina tablas pero no funciones. Usar
+  CREATE OR REPLACE FUNCTION. (El SQL sustituye al codigo ya aplicado: en sicovi_local la
+  migracion se aplico con CREATE FUNCTION; el cambio no altera el esquema resultante.)
+- Nunca usar migrate:fresh, db:wipe ni TRUNCATE para actualizar.
+
+8. PRUEBAS
+Ejecutado por el autor el 2026-10-22 en su PC: PostgreSQL 17.11, PHP 8.4.27, Laravel 13.37.0.
+  - artisan migrate --force sobre sicovi_local (tras las 5 migraciones de Manuel): DONE, batch 2.
+    Conteos antes y despues sin cambio: users 0, products 0, categories 0,
+    inventory_balances 0, audit_events 0; stock_sum 0; negative_balances 0.
+  - Objetos verificados por consulta: 4 tablas, 3 triggers (purchase_items_draft_only,
+    purchases_no_delete_confirmed, purchases_state_guard) y 2 secuencias (purchase_code_seq,
+    supplier_code_seq).
+  - Pruebas de comportamiento en SQL (script de verificacion no versionado, transaccion con
+    ROLLBACK): 38 correctas, 0 fallidas. Cubren: codigos PRV-/COM- autogenerados; NIT nulo,
+    duplicado normalizado y solo guiones rechazados; referencia repetida del mismo proveedor
+    rechazada (tambien tras anular) y aceptada en otro proveedor; estado invalido; importe de
+    linea incorrecto, producto repetido, cantidad cero y costo negativo rechazados; redondeo
+    0.001 x 5.00 = 0.01; compra confirmada no editable, no borrable y sin lineas modificables;
+    no vuelve a borrador; anular exige motivo; anulada no se reconfirma ni cambia su motivo;
+    descarte de borrador permitido; idempotencia (clave duplicada, hash invalido, par
+    result_type/result_id).
+  - down() y up() sobre sicovi_test: migrate:rollback --step=1 revirtio solo esta migracion
+    (quedo Pending) y volvio a aplicarse sin errores.
+  - PHPUnit (suite de Manuel sobre sicovi_test): OK (184 tests, 1120 assertions).
+    HALLAZGO: la primera ejecucion fallo en 136 pruebas porque CREATE FUNCTION no era
+    repetible: migrate:fresh (usado por RefreshDatabase) elimina tablas pero NO funciones.
+    Corregido con CREATE OR REPLACE FUNCTION en las 3 funciones; la suite quedo en verde.
+PENDIENTE:
+  - Pruebas de funcionamiento Y-01 a Y-17 cuando existan modelos, servicios y pantallas.
+  - Prueba de restauracion del respaldo en una BD vacia y separada (no realizada).
+
+9. RECUPERACION
+Antes de migrar: respaldo con pg_dump (seccion 5). Como la migracion es aditiva, ante un
+fallo transaccional PostgreSQL revierte el DDL; si quedara a medias, restaurar el respaldo
+en una BD vacia y separada con pg_restore 17 y comparar conteos. No restaurar encima de
+sicovi_local sin procedimiento validado.
+down() elimina las 4 tablas, triggers, funciones y secuencias: BORRA proveedores y compras.
+Usarlo solo en bases descartables o con respaldo verificado.
+
+10. RECEPCION
+Manuel: Pendiente
+Kevin: Pendiente
+Luis: Pendiente
+Yourgen: Confirmado, 2026-10-22
+
+NOTA: Este TXT acompana obligatoriamente la migracion versionada. No la
+sustituye. Cada integrante aplica el cambio en su base local independiente.
