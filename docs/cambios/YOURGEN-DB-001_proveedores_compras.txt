@@ -2,12 +2,11 @@ SICOVI - FORMATO OBLIGATORIO DE CAMBIO DE BASE DE DATOS
 ========================================================
 
 ID DEL CAMBIO: YOURGUEN-DB-001
-AUTOR: Yourgen (YOURGUEN)
+AUTOR: Yourgen (YOURGEN)
 FECHA: 2026-10-21
 MODULO: Proveedores / Compras
-RAMA: yourguen-proveedores-compras-inventario
-COMMIT: [pendiente: registrar el SHA en el pull request despues de crear el commit;
-        un archivo no puede contener el hash del commit que lo incluye]
+RAMA: feature/yourgen-compras-inventario (paso en yourgen/db-001-esquema)
+COMMIT: b4de9c6 (migracion y TXT inicial). Este TXT se corrigio en un commit posterior.
 
 1. RESUMEN Y JUSTIFICACION
 Agrega las tablas de proveedores y compras de V1 y el registro comun de idempotencia.
@@ -92,7 +91,7 @@ Resumen del esquema creado:
 5. COMANDOS PARA QUE CADA COMPANERO ACTUALICE SU BD LOCAL
 Confirmar primero la integracion de Git y hacer respaldo privado:
   New-Item -ItemType Directory -Force C:\RESPALDOS_PRIVADOS
-  pg_dump -h 127.0.0.1 -p 5432 -U sicovi_app -W -d sicovi_local -Fc -f C:\RESPALDOS_PRIVADOS\sicovi_antes_YOURGUEN_DB001.dump
+  pg_dump -h 127.0.0.1 -p 5432 -U sicovi_app -W -d sicovi_local -Fc -f C:\RESPALDOS_PRIVADOS\sicovi_antes_YOURGEN_DB001.dump
   (usar el puerto real de cada PC)
 
 cd [RUTA_LOCAL_DEL_PROYECTO]
@@ -148,7 +147,7 @@ Guardar los conteos antes y despues: la migracion no debe cambiar ninguno.
 - Nunca usar migrate:fresh, db:wipe ni TRUNCATE para actualizar.
 
 8. PRUEBAS
-Ejecutado por el autor el 2026-10-21 en su PC: PostgreSQL 17.11, PHP 8.4.27, Laravel 13.37.0.
+Ejecutado por el autor el 2026-10-22 en su PC: PostgreSQL 17.11, PHP 8.4.27, Laravel 13.37.0.
   - artisan migrate --force sobre sicovi_local (tras las 5 migraciones de Manuel): DONE, batch 2.
     Conteos antes y despues sin cambio: users 0, products 0, categories 0,
     inventory_balances 0, audit_events 0; stock_sum 0; negative_balances 0.
@@ -186,7 +185,7 @@ Usarlo solo en bases descartables o con respaldo verificado.
 Manuel: Pendiente
 Kevin: Pendiente
 Luis: Pendiente
-Yourguen: Pendiente
+Yourgen: Confirmado, 2026-10-22
 
 NOTA: Este TXT acompana obligatoriamente la migracion versionada. No la
 sustituye. Cada integrante aplica el cambio en su base local independiente.
