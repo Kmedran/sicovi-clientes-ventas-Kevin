@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Company;
+use App\Models\InventoryAdjustment;
 use App\Models\Permission;
 use App\Models\Product;
 use App\Models\Role;
@@ -32,6 +33,7 @@ class AuditService
         Brand::class => ['name', 'description', 'active'],
         Unit::class => ['code', 'name', 'abbreviation', 'decimal_places', 'active'],
         Product::class => ['sku', 'barcode', 'name', 'description', 'category_id', 'subcategory_id', 'brand_id', 'unit_id', 'presentation', 'sale_price', 'reference_cost', 'minimum_stock', 'location', 'active'],
+        InventoryAdjustment::class => ['code', 'warehouse_id', 'type', 'adjustment_date', 'reason', 'reference', 'state', 'voided_by', 'void_reason'],
     ];
 
     public function record(?User $actor, string $action, Model $entity, array $before = [], array $after = [], ?string $reason = null): void

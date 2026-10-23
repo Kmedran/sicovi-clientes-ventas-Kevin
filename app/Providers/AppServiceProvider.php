@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
-        foreach (['users.view', 'users.create', 'users.update', 'users.deactivate', 'users.reset_password', 'roles.view', 'roles.manage', 'settings.view', 'settings.update', 'products.view', 'products.create', 'products.update', 'products.deactivate', 'products.view_cost', 'categories.view', 'categories.manage', 'subcategories.view', 'subcategories.manage', 'brands.view', 'brands.manage', 'units.view', 'units.manage'] as $ability) {
+        foreach (['users.view', 'users.create', 'users.update', 'users.deactivate', 'users.reset_password', 'roles.view', 'roles.manage', 'settings.view', 'settings.update', 'products.view', 'products.create', 'products.update', 'products.deactivate', 'products.view_cost', 'categories.view', 'categories.manage', 'subcategories.view', 'subcategories.manage', 'brands.view', 'brands.manage', 'units.view', 'units.manage','units.view', 'units.manage', 'inventory.adjust'] as $ability) {
             Gate::define($ability, fn (User $user) => $user->hasPermission($ability));
         }
     }
