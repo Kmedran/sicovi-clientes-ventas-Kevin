@@ -1,6 +1,6 @@
-# SICOVI — entrega de Manuel
+# SICOVI — entrega integrada
 
-Base del Sistema Integrado de Compras, Ventas e Inventario. Referencias **MANUEL-01 a MANUEL-04**, locales; no representan incidencias Jira verificadas. Trabajo en `codex/manuel-base-acceso-catalogos`, sin commits ni publicación remota.
+Base del Sistema Integrado de Compras, Ventas e Inventario. Las referencias MANUEL-01 a MANUEL-04 y YOURGEN-DB-001 a YOURGEN-DB-003 son identificadores internos; no representan incidencias Jira verificadas. La implementación de proveedores, compras e inventario está en `feature/yourgen-compras-inventario` y se revisa mediante el PR #2.
 
 ## Alcance entregado
 
@@ -8,7 +8,17 @@ Laravel con PostgreSQL; inicio/cierre de sesión; cuentas activas, cambio y rest
 
 Cada producto nace con un saldo cero, en la misma transacción. No existe un formulario de stock. El costo de referencia solo se envía a usuarios con `products.view_cost`. No hay eliminación de registros con historial.
 
-Proveedores, compras e inventario operativo corresponden a Yourgen; clientes y ventas a Kevin; anulaciones, consultas comerciales e integración a Luis. Esta entrega no implementa esos módulos ni el dossier académico completo.
+Proveedores, compras e inventario operativo corresponden a Yourgen; clientes y ventas a Kevin; anulaciones, consultas comerciales e integración a Luis. La rama de Yourgen incluye proveedores, compras, recepción, reversiones, existencias, kardex, ajustes, permisos y auditoría transaccional. La venta funcional y el dossier académico completo siguen siendo trabajo integrado del equipo.
+
+### Estado operativo de la rama de Yourgen
+
+- Confirmar una compra equivale a recibir toda la mercadería en V1; no hay recepciones parciales.
+- Los ajustes se crean aplicados y admiten `opening`, `extraordinary_entry` y `count_adjustment`.
+- La implementación no limita a un único inventario inicial por producto; cada operación conserva idempotencia, auditoría y trazabilidad.
+- El identificador tributario del proveedor es opcional; cuando existe, conserva normalización y unicidad.
+- El rol Bodega puede consultar existencias, registrar ajustes y anularlos con permisos separados.
+- La confirmación y anulación de compras, así como los ajustes, rechazan la reutilización de una clave de idempotencia con contenido distinto.
+- Validación actual de la rama: **220 pruebas aprobadas y 1,284 aserciones**.
 
 Se revisaron el TXT maestro de Manuel, las tres páginas de la guía académica y la imagen de distribución vigente. La guía propone cinco alumnos; la organización vigente del equipo tiene cuatro. La venta funcional es una exigencia del proyecto integrado, no de esta primera entrega. Los rótulos inconsistentes de la tabla académica no crean un módulo adicional de servicios. Las fechas del 19 al 27 y el cierre a las 21:00 son acuerdos internos del equipo.
 

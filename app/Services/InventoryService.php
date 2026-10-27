@@ -20,7 +20,7 @@ class InventoryService
 {
     public const PERMISSION_ADJUST = 'inventory.adjust';
 
-    public const PERMISSION_VOID_ADJUSTMENT = 'inventory.adjust';
+    public const PERMISSION_VOID_ADJUSTMENT = 'inventory.void_adjustment';
 
     private const TYPES = ['opening', 'extraordinary_entry', 'count_adjustment'];
 
@@ -36,9 +36,13 @@ class InventoryService
             return $this->applyAdjustmentOnce($actor, $data);
         } catch (UniqueConstraintViolationException $e) {
             $key = trim((string) ($data['idempotency_key'] ?? ''));
+            $hash = $key === null ? null : $this->requestHash($data);
             $existing = $key !== '' ? InventoryAdjustment::where('created_by', $actor->id)->where('applied_idempotency_key', $key)->first() : null;
-            if ($existing) {
+            if ($existing && hash_equals((string) $existing->applied_idempotency_hash, $hash)) {
                 return $existing;
+            }
+            if ($existing) {
+                throw ValidationException::withMessages(['idempotency_key' => 'La clave de ajuste ya fue usada con datos diferentes.']);
             }
             throw $e;
         }
@@ -60,6 +64,7 @@ class InventoryService
             $reference = isset($data['reference']) && trim((string) $data['reference']) !== '' ? trim($data['reference']) : null;
             $notes = isset($data['notes']) && trim((string) $data['notes']) !== '' ? trim($data['notes']) : null;
             $key = isset($data['idempotency_key']) && trim((string) $data['idempotency_key']) !== '' ? trim($data['idempotency_key']) : null;
+            $hash = $this->requestHash($data);
             $raw = (string) ($data['adjustment_date'] ?? '');
             try {
                 $date = Carbon::createFromFormat('!Y-m-d', $raw);
@@ -73,7 +78,11 @@ class InventoryService
             if ($key !== null) {
                 $existing = InventoryAdjustment::where('created_by', $actor->id)->where('applied_idempotency_key', $key)->first();
                 if ($existing) {
-                    return $existing; // reintento: no se duplica
+                    if (! hash_equals((string) $existing->applied_idempotency_hash, $hash)) {
+                        throw ValidationException::withMessages(['idempotency_key' => 'La clave de ajuste ya fue usada con datos diferentes.']);
+                    }
+
+                    return $existing;
                 }
             }
 
@@ -122,7 +131,7 @@ class InventoryService
             $adjustment = InventoryAdjustment::create([
                 'warehouse_id' => $warehouse->id, 'type' => $type, 'adjustment_date' => $date->toDateString(),
                 'reason' => $reason, 'reference' => $reference, 'notes' => $notes,
-                'created_by' => $actor->id, 'applied_idempotency_key' => $key,
+                'created_by' => $actor->id, 'applied_idempotency_key' => $key, 'applied_idempotency_hash' => $hash,
             ]);
             $adjustment->refresh(); // trae code (AJU-000001) generado por la BD
 
@@ -285,6 +294,27 @@ class InventoryService
         }
 
         return $entries;
+    }
+
+    private function requestHash(array $data): string
+    {
+        $lines = array_map(static function (array $line): array {
+            return [
+                'product_id' => (int) ($line['product_id'] ?? 0),
+                'quantity' => trim((string) ($line['quantity'] ?? '')),
+                'counted_quantity' => trim((string) ($line['counted_quantity'] ?? '')),
+            ];
+        }, array_values($data['lines'] ?? []));
+        usort($lines, static fn (array $left, array $right): int => $left['product_id'] <=> $right['product_id']);
+
+        return hash('sha256', json_encode([
+            'type' => (string) ($data['type'] ?? ''),
+            'adjustment_date' => (string) ($data['adjustment_date'] ?? ''),
+            'reason' => trim((string) ($data['reason'] ?? '')),
+            'reference' => trim((string) ($data['reference'] ?? '')),
+            'notes' => trim((string) ($data['notes'] ?? '')),
+            'lines' => $lines,
+        ], JSON_THROW_ON_ERROR));
     }
 
     /** @return array<int,array> indexado por product_id y ordenado ascendente */

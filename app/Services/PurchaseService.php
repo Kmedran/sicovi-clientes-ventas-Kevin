@@ -26,7 +26,7 @@ class PurchaseService
     public function confirmPurchase(Purchase $purchase, array $lines, User $actor, string $idempotencyKey): Purchase
     {
         $normalized = $this->normalizeRequest($lines);
-        $hash = hash('sha256', json_encode($normalized, JSON_THROW_ON_ERROR));
+        $hash = hash('sha256', json_encode(['purchase_id' => $purchase->id, 'lines' => $normalized], JSON_THROW_ON_ERROR));
 
         return DB::transaction(function () use ($purchase, $normalized, $actor, $idempotencyKey, $hash): Purchase {
             $existingRequest = DB::table('idempotency_records')

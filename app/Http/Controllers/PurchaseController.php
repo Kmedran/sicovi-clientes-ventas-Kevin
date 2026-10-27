@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Supplier;
+use App\Services\AuditService;
 use App\Services\DecimalService;
 use App\Services\OrganizationContext;
 use App\Services\PurchaseService;
@@ -20,6 +21,7 @@ class PurchaseController extends Controller
         private PurchaseService $purchaseService,
         private DecimalService $decimals,
         private OrganizationContext $organization,
+        private AuditService $audit,
     ) {}
 
     public function index(Request $request): View
@@ -105,6 +107,8 @@ class PurchaseController extends Controller
                     'line_total' => $lineTotal,
                 ]);
             }
+
+            $this->audit->record(auth()->user(), 'purchases.created', $purchase, [], $purchase->getAttributes(), 'Borrador de compra creado.');
 
             return $purchase;
         });

@@ -48,7 +48,7 @@ class SystemSeeder extends Seeder
                 'purchasing' => ['Compras', 'Mantenimiento de proveedores, productos y catálogos; recepción de mercadería.', [...$catalogWrite, 'suppliers.view', 'suppliers.create', 'suppliers.update', 'suppliers.deactivate', 'purchases.view', 'purchases.create', 'purchases.confirm', 'inventory.view']],
                 'seller' => ['Vendedor', 'Consulta de productos y precios de venta; sin acceso a costos.', $catalogRead],
                 'supervisor' => ['Supervisor', 'Supervisión de productos, costos de referencia y configuración; sin escrituras.', [...$catalogRead, 'products.view_cost', 'settings.view']],
-                'warehouse' => ['Bodega', 'Consulta de productos y catálogos; ajustes de inventario autorizados.', [...$catalogRead, 'inventory.adjust']],
+                'warehouse' => ['Bodega', 'Consulta de productos, existencias y catálogos; ajustes de inventario autorizados.', [...$catalogRead, 'inventory.view', 'inventory.adjust', 'inventory.void_adjustment']],
                 'viewer' => ['Consulta', 'Lectura de catálogos expresamente autorizados; sin acceso a costos.', $catalogRead],
             ];
             foreach ($roles as $code => [$name, $description, $codes]) {

@@ -153,6 +153,17 @@ class InventoryServiceTest extends DatabaseTestCase
         $this->assertSame(1, DB::table('inventory_movements')->count());
     }
 
+    public function test_reusing_an_adjustment_idempotency_key_with_different_data_is_rejected(): void
+    {
+        $data = $this->data('opening', [['product_id' => $this->productA, 'quantity' => '7']]) + ['idempotency_key' => 'clave-124'];
+        $this->service->applyAdjustment($this->admin, $data);
+        $different = $data;
+        $different['lines'][0]['quantity'] = '8';
+
+        $this->assertInvalid('idempotency_key', fn () => $this->service->applyAdjustment($this->admin, $different));
+        $this->assertSame('7.000', $this->balanceOf($this->productA));
+    }
+
     public function test_quantities_respect_the_precision_of_the_unit(): void
     {
         $this->assertInvalid('lines', fn () => $this->service->applyAdjustment($this->admin, $this->data('opening', [['product_id' => $this->productA, 'quantity' => '2.5']])));

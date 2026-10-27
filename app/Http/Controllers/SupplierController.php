@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
+use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class SupplierController extends Controller
 {
+    public function __construct(private AuditService $audit) {}
+
     public function index(Request $request): View
     {
         Gate::authorize('suppliers.view');
@@ -35,7 +39,12 @@ class SupplierController extends Controller
     public function store(Request $request): RedirectResponse
     {
         Gate::authorize('suppliers.create');
-        $supplier = Supplier::query()->create($this->validated($request));
+        $supplier = DB::transaction(function () use ($request): Supplier {
+            $supplier = Supplier::query()->create($this->validated($request));
+            $this->audit->record($request->user(), 'suppliers.created', $supplier, [], $supplier->getAttributes());
+
+            return $supplier;
+        });
 
         return redirect()->route('suppliers.show', $supplier)->with('success', 'Proveedor creado.');
     }
@@ -58,15 +67,23 @@ class SupplierController extends Controller
     public function update(Request $request, Supplier $supplier): RedirectResponse
     {
         Gate::authorize('suppliers.update');
-        $supplier->update($this->validated($request));
+        DB::transaction(function () use ($request, $supplier): void {
+            $before = $supplier->getAttributes();
+            $supplier->update($this->validated($request));
+            $this->audit->record($request->user(), 'suppliers.updated', $supplier, $before, $supplier->getAttributes());
+        });
 
         return redirect()->route('suppliers.show', $supplier)->with('success', 'Proveedor actualizado.');
     }
 
-    public function deactivate(Supplier $supplier): RedirectResponse
+    public function deactivate(Request $request, Supplier $supplier): RedirectResponse
     {
         Gate::authorize('suppliers.deactivate');
-        $supplier->update(['active' => false]);
+        DB::transaction(function () use ($supplier, $request): void {
+            $before = $supplier->getAttributes();
+            $supplier->update(['active' => false]);
+            $this->audit->record($request->user(), 'suppliers.deactivated', $supplier, $before, $supplier->getAttributes(), 'Proveedor desactivado.');
+        });
 
         return redirect()->route('suppliers.show', $supplier)->with('success', 'Proveedor desactivado. El historial se conserva.');
     }

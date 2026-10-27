@@ -15,7 +15,6 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Subcategory;
 use App\Models\Unit;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 // 1. RUTAS PÚBLICAS (Invitados)
@@ -72,37 +71,4 @@ Route::middleware(['auth', 'active', 'auth.session'])->group(function () {
     Route::get('inventory/adjustments/create', [InventoryController::class, 'createAdjustment'])->name('inventory.adjustments.create');
     Route::post('inventory/adjustments', [InventoryController::class, 'storeAdjustment'])->name('inventory.adjustments.store');
     Route::post('inventory/adjustments/{adjustment}/void', [InventoryController::class, 'voidAdjustment'])->name('inventory.adjustments.void');
-});
-
-// 3. RUTAS TEMPORALES LIBRES
-Route::get('/producto-seguro', function () {
-    $catId = DB::table('categories')->where('name', 'Periféricos')->value('id');
-    if (! $catId) {
-        $catId = DB::table('categories')->insertGetId([
-            'code' => 'CAT-001', 'name' => 'Periféricos', 'active' => true, 'created_at' => now(), 'updated_at' => now(),
-        ]);
-    }
-
-    $brandId = DB::table('brands')->insertGetId([
-        'name' => 'AULA', 'active' => true, 'created_at' => now(), 'updated_at' => now(),
-    ]);
-
-    $unitId = DB::table('units')->insertGetId([
-        'name' => 'Unidad', 'abbreviation' => 'UN', 'active' => true, 'created_at' => now(), 'updated_at' => now(),
-    ]);
-
-    DB::table('products')->insert([
-        'name' => 'Teclado Mecánico AULA F75 Max',
-        'sku' => 'AULA-F75-MAX',
-        'category_id' => $catId,
-        'brand_id' => $brandId,
-        'unit_id' => $unitId,
-        'price' => 750.00,
-        'cost' => 500.00,
-        'active' => true,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
-
-    return '¡Producto inyectado con éxito!';
 });

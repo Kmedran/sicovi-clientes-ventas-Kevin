@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class InventoryAdjustment extends Model
 {
-    protected $fillable = ['warehouse_id', 'type', 'adjustment_date', 'reason', 'reference', 'notes', 'created_by', 'applied_idempotency_key'];
+    protected $fillable = ['warehouse_id', 'type', 'adjustment_date', 'reason', 'reference', 'notes', 'created_by', 'applied_idempotency_key', 'applied_idempotency_hash'];
 
     protected function casts(): array
     {

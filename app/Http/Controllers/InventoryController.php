@@ -64,7 +64,7 @@ class InventoryController extends Controller
 
     public function voidAdjustment(Request $request, InventoryAdjustment $adjustment): RedirectResponse
     {
-        Gate::authorize('inventory.adjust');
+        Gate::authorize('inventory.void_adjustment');
         $validated = $request->validate(['reason' => ['required', 'string', 'max:2000']]);
         $this->inventory->voidAdjustment($request->user(), $adjustment, $validated['reason']);
 

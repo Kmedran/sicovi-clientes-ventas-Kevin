@@ -327,5 +327,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setMobileOpen(false);
 });
 </script>
+@stack('scripts')
 </body>
 </html>
