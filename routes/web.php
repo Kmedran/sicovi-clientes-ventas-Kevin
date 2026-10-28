@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SaleController;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
@@ -64,9 +66,13 @@ Route::middleware(['auth', 'active', 'auth.session'])->group(function () {
 
     Route::resource('suppliers', SupplierController::class)->except('destroy');
     Route::patch('suppliers/{supplier}/deactivate', [SupplierController::class, 'deactivate'])->name('suppliers.deactivate');
+    Route::resource('customers', CustomerController::class)->except('destroy');
+    Route::patch('customers/{customer}/deactivate', [CustomerController::class, 'deactivate'])->name('customers.deactivate');
     Route::resource('purchases', PurchaseController::class)->except(['destroy', 'edit', 'update']);
     Route::post('purchases/{purchase}/confirm', [PurchaseController::class, 'confirm'])->name('purchases.confirm');
     Route::post('purchases/{purchase}/void', [PurchaseController::class, 'void'])->name('purchases.void');
+    Route::resource('sales', SaleController::class)->except(['destroy']);
+    Route::post('sales/{sale}/confirm', [SaleController::class, 'confirm'])->name('sales.confirm');
     Route::get('inventory', [InventoryController::class, 'index'])->name('inventory.index');
     Route::get('inventory/adjustments', [InventoryController::class, 'adjustments'])->name('inventory.adjustments.index');
     Route::get('inventory/adjustments/create', [InventoryController::class, 'createAdjustment'])->name('inventory.adjustments.create');

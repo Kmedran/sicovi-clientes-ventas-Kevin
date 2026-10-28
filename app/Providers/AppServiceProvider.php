@@ -30,8 +30,10 @@ class AppServiceProvider extends ServiceProvider
             'categories.view', 'categories.manage', 'subcategories.view', 'subcategories.manage',
             'brands.view', 'brands.manage', 'units.view', 'units.manage',
             'suppliers.view', 'suppliers.create', 'suppliers.update', 'suppliers.deactivate',
+            'customers.view', 'customers.create', 'customers.update', 'customers.deactivate',
             'purchases.view', 'purchases.create', 'purchases.confirm', 'purchases.void',
-            'inventory.view', 'inventory.adjust', 'inventory.void_adjustment',
+            'inventory.view', 'inventory.adjust', 'inventory.void_adjustment', 'sales.view',
+            'sales.create', 'sales.update', 'sales.confirm',
         ] as $ability) {
             Gate::define($ability, fn (User $user) => $user->hasPermission($ability));
         }

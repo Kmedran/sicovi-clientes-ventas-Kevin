@@ -18,6 +18,7 @@ class SystemSeeder extends Seeder
             DB::select('select pg_advisory_xact_lock(74126001)');
             $definitions = [
                 'users' => ['view' => 'Consultar usuarios', 'create' => 'Crear usuarios', 'update' => 'Editar usuarios', 'deactivate' => 'Desactivar usuarios', 'reset_password' => 'Restablecer contraseñas'],
+                'sales' => ['view' => 'Consultar ventas','create' => 'Crear ventas','update' => 'Editar ventas','confirm' => 'Confirmar ventas'],
                 'roles' => ['view' => 'Consultar roles', 'manage' => 'Administrar roles y permisos'],
                 'settings' => ['view' => 'Consultar configuración', 'update' => 'Editar configuración'],
                 'products' => ['view' => 'Consultar productos', 'create' => 'Crear productos', 'update' => 'Editar productos', 'deactivate' => 'Desactivar productos', 'view_cost' => 'Consultar costos de referencia'],
@@ -26,6 +27,7 @@ class SystemSeeder extends Seeder
                 'brands' => ['view' => 'Consultar marcas', 'manage' => 'Administrar marcas'],
                 'units' => ['view' => 'Consultar unidades', 'manage' => 'Administrar unidades'],
                 'suppliers' => ['view' => 'Consultar proveedores', 'create' => 'Crear proveedores', 'update' => 'Editar proveedores', 'deactivate' => 'Desactivar proveedores'],
+                'customers' => ['view' => 'Consultar clientes', 'create' => 'Crear clientes', 'update' => 'Editar clientes', 'deactivate' => 'Desactivar clientes'],
                 'inventory' => ['view' => 'Consultar inventario', 'adjust' => 'Registrar ajustes de inventario', 'void_adjustment' => 'Anular ajustes de inventario'],
                 'purchases' => ['view' => 'Consultar compras', 'create' => 'Crear compras', 'confirm' => 'Confirmar compras', 'void' => 'Anular compras'],
             ];
@@ -46,7 +48,7 @@ class SystemSeeder extends Seeder
             $roles = [
                 'admin' => ['Administrador', 'Acceso administrativo de la fase base.', array_keys($permissions)],
                 'purchasing' => ['Compras', 'Mantenimiento de proveedores, productos y catálogos; recepción de mercadería.', [...$catalogWrite, 'suppliers.view', 'suppliers.create', 'suppliers.update', 'suppliers.deactivate', 'purchases.view', 'purchases.create', 'purchases.confirm', 'inventory.view']],
-                'seller' => ['Vendedor', 'Consulta de productos y precios de venta; sin acceso a costos.', $catalogRead],
+                'seller' => ['Vendedor', 'Consulta de productos y precios de venta; sin acceso a costos.', [...$catalogRead, 'customers.view', 'customers.create', 'customers.update','sales.view', 'sales.create', 'sales.update', 'sales.confirm',]],
                 'supervisor' => ['Supervisor', 'Supervisión de productos, costos de referencia y configuración; sin escrituras.', [...$catalogRead, 'products.view_cost', 'settings.view']],
                 'warehouse' => ['Bodega', 'Consulta de productos, existencias y catálogos; ajustes de inventario autorizados.', [...$catalogRead, 'inventory.view', 'inventory.adjust', 'inventory.void_adjustment']],
                 'viewer' => ['Consulta', 'Lectura de catálogos expresamente autorizados; sin acceso a costos.', $catalogRead],

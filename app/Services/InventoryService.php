@@ -214,6 +214,68 @@ class InventoryService
         $this->post($actor, $warehouseId, $entries);
     }
 
+
+    /**
+     * Registra una salida de inventario por cada línea de una venta.
+     * El llamador debe ejecutar este método dentro de la transacción
+     * que confirma la venta.
+     *
+     * @param list<array{sale_item_id:int,product_id:int,quantity:string}> $lines
+     */
+    public function issueSaleLines(User $actor, int $warehouseId, array $lines): void
+    {
+        if (DB::transactionLevel() < 1) {
+            throw new LogicException(
+                'Las salidas de ventas deben registrarse dentro de una transacción.'
+            );
+        }
+
+        if ($lines === []) {
+            $this->invalid('lines', 'La venta debe tener al menos una línea.');
+        }
+
+        $places = DB::table('products')
+            ->join('units', 'units.id', '=', 'products.unit_id')
+            ->whereIn('products.id', array_column($lines, 'product_id'))
+            ->pluck('units.decimal_places', 'products.id');
+
+        $entries = [];
+
+        foreach ($lines as $line) {
+            $productId = (int) $line['product_id'];
+
+            if (! isset($places[$productId])) {
+                $this->invalid('lines', 'Hay productos que no existen.');
+            }
+
+            try {
+                $quantity = $this->decimals->quantity(
+                    $line['quantity'],
+                    (int) $places[$productId],
+                    true
+                );
+            } catch (\InvalidArgumentException $e) {
+                $this->invalid('lines', $e->getMessage());
+            }
+
+            $entries[] = [
+                'product_id' => $productId,
+                'movement_type' => 'sale',
+                'quantity' => bcmul($quantity, '-1', 3),
+                'sale_item_id' => (int) $line['sale_item_id'],
+                'reason' => null,
+            ];
+        }
+
+        usort(
+            $entries,
+            fn (array $a, array $b) => $a['product_id'] <=> $b['product_id']
+        );
+
+        $this->post($actor, $warehouseId, $entries);
+    }
+
+
     /**
      * Para PurchaseService al anular: la compra debe estar ya marcada 'voided' en esta transaccion.
      *
@@ -251,6 +313,7 @@ class InventoryService
                 'product_id' => $productId, 'warehouse_id' => $warehouseId, 'movement_type' => $entry['movement_type'],
                 'quantity' => $entry['quantity'], 'balance_before' => $before, 'balance_after' => $after,
                 'purchase_item_id' => $entry['purchase_item_id'] ?? null,
+                'sale_item_id' => $entry['sale_item_id'] ?? null,
                 'adjustment_item_id' => $entry['adjustment_item_id'] ?? null,
                 'reversal_of_id' => $entry['reversal_of_id'] ?? null,
                 'actor_id' => $actor->id, 'reason' => $entry['reason'] ?? null,
