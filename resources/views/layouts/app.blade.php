@@ -114,6 +114,7 @@
                         @can('suppliers.view')<a href="{{ route('suppliers.index') }}" class="{{ request()->routeIs('suppliers.*') ? 'is-active' : '' }}">Proveedores</a>@endcan
                         @can('purchases.view')<a href="{{ route('purchases.index') }}" class="{{ request()->routeIs('purchases.*') ? 'is-active' : '' }}">Compras</a>@endcan
                         @can('inventory.view')<a href="{{ route('inventory.index') }}" class="{{ request()->routeIs('inventory.*') ? 'is-active' : '' }}">Existencias y kardex</a>@endcan
+                        @can('inventory.view')<a href="{{ route('inventory.adjustments.index') }}" class="{{ request()->routeIs('inventory.adjustments.*') && !request()->routeIs('inventory.adjustments.create') ? 'is-active' : '' }}">Historial de ajustes</a>@endcan
                         @can('inventory.adjust')<a href="{{ route('inventory.adjustments.create') }}">Registrar ajuste</a>@endcan
                     </div>
                 </details>

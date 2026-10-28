@@ -17,8 +17,9 @@ Proveedores, compras e inventario operativo corresponden a Yourgen; clientes y v
 - La implementación no limita a un único inventario inicial por producto; cada operación conserva idempotencia, auditoría y trazabilidad.
 - El identificador tributario del proveedor es opcional; cuando existe, conserva normalización y unicidad.
 - El rol Bodega puede consultar existencias, registrar ajustes y anularlos con permisos separados.
+- El historial de ajustes permite filtrar, consultar el detalle y solicitar anulaciones con motivo, confirmación y trazabilidad.
 - La confirmación y anulación de compras, así como los ajustes, rechazan la reutilización de una clave de idempotencia con contenido distinto.
-- Validación actual de la rama: **220 pruebas aprobadas y 1,284 aserciones**.
+- Validación actual de la rama: **222 pruebas aprobadas y 1,304 aserciones**.
 
 Se revisaron el TXT maestro de Manuel, las tres páginas de la guía académica y la imagen de distribución vigente. La guía propone cinco alumnos; la organización vigente del equipo tiene cuatro. La venta funcional es una exigencia del proyecto integrado, no de esta primera entrega. Los rótulos inconsistentes de la tabla académica no crean un módulo adicional de servicios. Las fechas del 19 al 27 y el cierre a las 21:00 son acuerdos internos del equipo.
 

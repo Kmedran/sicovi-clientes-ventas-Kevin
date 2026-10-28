@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Services\InventoryService;
 use Illuminate\Support\Facades\DB;
 use Tests\DatabaseTestCase;
 
@@ -94,11 +95,72 @@ class OperationsHttpTest extends DatabaseTestCase
         $this->assertSame(1, DB::table('inventory_movements')->where('purchase_item_id', $itemId)->where('movement_type', 'reversal')->count());
     }
 
-    private function actor(string $role): User
+    public function test_adjustment_history_detail_and_void_routes_preserve_traceability(): void
+    {
+        $this->actingAs($this->admin);
+        $adjustment = app(InventoryService::class)->applyAdjustment($this->admin, [
+            'type' => 'opening', 'adjustment_date' => '2026-10-27', 'reason' => 'Carga inicial HTTP',
+            'idempotency_key' => 'http-adjustment-history-1',
+            'lines' => [['product_id' => $this->productId, 'quantity' => '5']],
+        ]);
+        $this->post(route('inventory.adjustments.void', $adjustment), ['reason' => 'Corrección de captura'])
+            ->assertRedirect(route('inventory.adjustments.show', $adjustment));
+
+        $this->get(route('inventory.adjustments.index', ['state' => 'voided']))
+            ->assertOk()
+            ->assertSee($adjustment->code);
+        $this->get(route('inventory.adjustments.show', $adjustment))
+            ->assertOk()
+            ->assertSee('Anulado')
+            ->assertSee('Corrección de captura')
+            ->assertSee($this->admin->name)
+            ->assertDontSee('Anular ajuste');
+
+        $this->assertSame('voided', DB::table('inventory_adjustments')->where('id', $adjustment->id)->value('state'));
+        $this->assertSame('0.000', (string) DB::table('inventory_balances')->where('product_id', $this->productId)->value('quantity'));
+        $this->assertSame(1, DB::table('inventory_movements')->where('adjustment_item_id', DB::table('inventory_adjustment_items')->where('adjustment_id', $adjustment->id)->value('id'))->where('movement_type', 'opening')->count());
+        $this->assertSame(1, DB::table('inventory_movements')->where('reversal_of_id', DB::table('inventory_movements')->where('adjustment_item_id', DB::table('inventory_adjustment_items')->where('adjustment_id', $adjustment->id)->value('id'))->value('id'))->count());
+        $this->assertDatabaseHas('audit_events', ['action' => 'inventory_adjustments.voided']);
+    }
+
+    public function test_adjustment_void_requires_permission_reason_and_rejects_negative_reversal(): void
+    {
+        $this->actingAs($this->admin);
+        $adjustment = app(InventoryService::class)->applyAdjustment($this->admin, [
+            'type' => 'opening', 'adjustment_date' => '2026-10-27', 'reason' => 'Carga inicial HTTP',
+            'idempotency_key' => 'http-adjustment-history-2',
+            'lines' => [['product_id' => $this->productId, 'quantity' => '5']],
+        ]);
+        $this->post(route('inventory.adjustments.void', $adjustment), [])
+            ->assertSessionHasErrors('reason');
+
+        $this->serviceApplyCountAdjustment('4');
+        $this->post(route('inventory.adjustments.void', $adjustment), ['reason' => 'No debe revertir'])
+            ->assertSessionHasErrors('lines');
+        $this->assertSame('applied', DB::table('inventory_adjustments')->where('id', $adjustment->id)->value('state'));
+
+        $viewer = $this->actor('admin', 'viewer');
+        $viewer->role->permissions()->where('code', 'inventory.void_adjustment')->detach();
+        $this->withoutMiddleware();
+        $this->actingAs($viewer);
+        $this->post(route('inventory.adjustments.void', $adjustment), ['reason' => 'No autorizado'])
+            ->assertForbidden();
+    }
+
+    private function serviceApplyCountAdjustment(string $counted): void
+    {
+        app(InventoryService::class)->applyAdjustment($this->admin, [
+            'type' => 'count_adjustment', 'adjustment_date' => '2026-10-27', 'reason' => 'Consumo de prueba',
+            'idempotency_key' => 'http-adjustment-count-'.$counted,
+            'lines' => [['product_id' => $this->productId, 'counted_quantity' => $counted]],
+        ]);
+    }
+
+    private function actor(string $role, string $suffix = ''): User
     {
         $user = new User;
         $user->forceFill([
-            'name' => 'HTTP '.$role, 'email' => 'http-'.$role.'@example.test',
+            'name' => 'HTTP '.$role, 'email' => 'http-'.$role.$suffix.'@example.test',
             'password' => 'Fixture-only-passphrase-2026!', 'role_id' => Role::where('code', $role)->sole()->id, 'active' => true,
         ])->save();
 

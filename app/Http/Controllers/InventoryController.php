@@ -6,6 +6,7 @@ use App\Models\InventoryAdjustment;
 use App\Models\Product;
 use App\Services\InventoryService;
 use App\Services\OrganizationContext;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,6 +43,36 @@ class InventoryController extends Controller
         return view('inventory.adjustment', ['products' => Product::query()->where('active', true)->with('unit')->orderBy('name')->get()]);
     }
 
+    public function adjustments(Request $request): View
+    {
+        Gate::authorize('inventory.view');
+        $warehouse = $this->organization->warehouse();
+        $adjustments = InventoryAdjustment::query()
+            ->with('creator')
+            ->where('warehouse_id', $warehouse->id)
+            ->when($request->filled('q'), fn ($query) => $query->where(function ($nested) use ($request): void {
+                $value = '%'.trim((string) $request->string('q')).'%';
+                $nested->where('code', 'ilike', $value)->orWhere('reason', 'ilike', $value);
+            }))
+            ->when($request->filled('type'), fn ($query) => $query->where('type', $request->string('type')->toString()))
+            ->when($request->filled('state'), fn ($query) => $query->where('state', $request->string('state')->toString()))
+            ->when($request->filled('date_from'), fn ($query) => $query->whereDate('adjustment_date', '>=', $request->date('date_from')))
+            ->when($request->filled('date_to'), fn ($query) => $query->whereDate('adjustment_date', '<=', $request->date('date_to')))
+            ->latest('id')
+            ->paginate(20)
+            ->withQueryString();
+
+        return view('inventory.adjustments', compact('adjustments'));
+    }
+
+    public function showAdjustment(InventoryAdjustment $adjustment): View
+    {
+        Gate::authorize('inventory.view');
+        $adjustment = $this->adjustmentForCurrentWarehouse($adjustment);
+
+        return view('inventory.adjustment-show', compact('adjustment'));
+    }
+
     public function storeAdjustment(Request $request): RedirectResponse
     {
         Gate::authorize('inventory.adjust');
@@ -65,9 +96,20 @@ class InventoryController extends Controller
     public function voidAdjustment(Request $request, InventoryAdjustment $adjustment): RedirectResponse
     {
         Gate::authorize('inventory.void_adjustment');
+        $adjustment = $this->adjustmentForCurrentWarehouse($adjustment);
         $validated = $request->validate(['reason' => ['required', 'string', 'max:2000']]);
         $this->inventory->voidAdjustment($request->user(), $adjustment, $validated['reason']);
 
-        return back()->with('success', 'Ajuste anulado.');
+        return redirect()->route('inventory.adjustments.show', $adjustment)->with('success', 'Ajuste anulado.');
+    }
+
+    private function adjustmentForCurrentWarehouse(InventoryAdjustment $adjustment): InventoryAdjustment
+    {
+        $warehouseId = $this->organization->warehouse()->id;
+        if ((int) $adjustment->warehouse_id !== (int) $warehouseId) {
+            throw (new ModelNotFoundException)->setModel(InventoryAdjustment::class, [$adjustment->id]);
+        }
+
+        return $adjustment->load(['creator', 'voidedBy', 'items.product.unit']);
     }
 }

@@ -68,7 +68,9 @@ Route::middleware(['auth', 'active', 'auth.session'])->group(function () {
     Route::post('purchases/{purchase}/confirm', [PurchaseController::class, 'confirm'])->name('purchases.confirm');
     Route::post('purchases/{purchase}/void', [PurchaseController::class, 'void'])->name('purchases.void');
     Route::get('inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    Route::get('inventory/adjustments', [InventoryController::class, 'adjustments'])->name('inventory.adjustments.index');
     Route::get('inventory/adjustments/create', [InventoryController::class, 'createAdjustment'])->name('inventory.adjustments.create');
+    Route::get('inventory/adjustments/{adjustment}', [InventoryController::class, 'showAdjustment'])->name('inventory.adjustments.show');
     Route::post('inventory/adjustments', [InventoryController::class, 'storeAdjustment'])->name('inventory.adjustments.store');
     Route::post('inventory/adjustments/{adjustment}/void', [InventoryController::class, 'voidAdjustment'])->name('inventory.adjustments.void');
 });
